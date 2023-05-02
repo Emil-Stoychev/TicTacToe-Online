@@ -1,0 +1,244 @@
+@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css");
+
+.page-not-found {
+  position: relative;
+  width: 800px;
+  height: 600px;
+  background-color: #1c1c1c;
+  border-radius: 8px;
+  padding: 0.2rem;
+  overflow: hidden;
+  user-select: none;
+  margin: 5% auto;
+}
+
+.page-not-found::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 800px;
+  height: 600px;
+  background: linear-gradient(0deg, transparent, #45f3ff, #45f3ff);
+  transform-origin: bottom right;
+  animation: animate 6s linear infinite;
+}
+
+.page-not-found::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 800px;
+  height: 600px;
+  background: linear-gradient(0deg, transparent, #45f3ff, #45f3ff);
+  transform-origin: bottom right;
+  animation: animate 6s linear infinite;
+  animation-delay: -3s;
+}
+
+@keyframes animate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.page-not-found div.cnt-scene {
+  border-radius: 8px;
+  background: #28292d;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
+
+.page-not-found div.cnt-scene .scene {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.page-not-found .cnt-scene .text {
+  width: 100%;
+  animation: text 0.6s 1.8s ease backwards;
+  z-index: 14;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  margin: 0 auto;
+  margin-top: 10rem;
+}
+
+@keyframes text {
+  0% {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+}
+
+.page-not-found .cnt-scene .text p {
+  color: white;
+  font-size: 18px;
+  letter-spacing: 0.6px;
+  margin-bottom: 40px;
+  text-shadow: 6px 6px 10px #45f3ff;
+}
+.page-not-found .cnt-scene .text button {
+  height: 40px;
+  padding: 0 30px;
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: 0px 2px 20px #45f3ff;
+  z-index: 3;
+  color: #695681;
+  background-color: white;
+  text-transform: uppercase;
+  font-weight: 600;
+  font-size: 12px;
+  transition: all 0.3s ease;
+}
+.page-not-found .cnt-scene .text button:hover {
+  box-shadow: 0px 10px 10px -10px #45f3ff;
+  transform: translateY(5px);
+  background: #45f3ff;
+  color: white;
+}
+.page-not-found .cnt-scene .scene .p404 {
+  font-size: 200px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  color: white;
+  z-index: 2;
+  animation: anime404 0.6s cubic-bezier(0.3, 0.8, 1, 1.05) both;
+  animation-delay: 1.2s;
+  position: absolute;
+}
+
+@keyframes anime404 {
+  0% {
+    opacity: 0;
+    transform: scale(10) skew(20deg, 20deg);
+  }
+}
+.page-not-found .cnt-scene .scene .p404:nth-of-type(2) {
+  z-index: 1;
+  animation-delay: 1s;
+  filter: blur(5px);
+  opacity: 0.8;
+  margin-top: 3rem;
+}
+
+@media screen and (max-width: 1035px) {
+  .page-not-found {
+    width: 700px;
+    height: 600px;
+    padding: 0.2rem;
+  }
+
+  .page-not-found::before {
+    width: 700px;
+    height: 600px;
+  }
+
+  .page-not-found::after {
+    width: 700px;
+    height: 600px;
+  }
+}
+
+@media screen and (max-width: 835px) {
+  .page-not-found {
+    width: 600px;
+  }
+
+  .page-not-found::before {
+    width: 600px;
+  }
+
+  .page-not-found::after {
+    width: 600px;
+  }
+}
+
+@media screen and (max-width: 635px) {
+  .page-not-found {
+    width: 450px;
+  }
+
+  .page-not-found::before {
+    width: 450px;
+  }
+
+  .page-not-found::after {
+    width: 450px;
+  }
+
+  .page-not-found .cnt-scene .scene .p404 {
+    font-size: 140px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .page-not-found {
+    width: 400px;
+  }
+}
+
+@media screen and (max-width: 440px) {
+  .page-not-found {
+    width: 350px;
+  }
+
+  .page-not-found .cnt-scene .scene .p404 {
+    font-size: 100px;
+  }
+
+  .page-not-found .cnt-scene .text p {
+    font-size: 14px;
+  }
+}
+
+@media screen and (max-width: 380px) {
+  .page-not-found {
+    width: 300px;
+  }
+
+  .page-not-found .cnt-scene .scene .p404 {
+    font-size: 100px;
+  }
+
+  .page-not-found .cnt-scene .text p {
+    font-size: 12px;
+  }
+}
+
+@media screen and (max-width: 320px) {
+  .page-not-found {
+    width: 250px;
+  }
+
+  .page-not-found .cnt-scene .scene .p404 {
+    font-size: 80px;
+  }
+
+  .page-not-found .cnt-scene .text p {
+    font-size: 10px;
+  }
+
+  .page-not-found .cnt-scene .text button {
+    height: 32px;
+    padding: 0 20px;
+    font-size: 10px;
+  }
+}
