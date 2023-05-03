@@ -8,7 +8,12 @@ const gameSchema = new mongoose.Schema({
         enum: ['Public', 'Private'],
         default: 'Public'
     },
-    roomId: String
+    roomId: String,
+    board: {
+        type: Array,
+        default: ['', '', '', '', '', '', '', '', '']
+    },
+    currentPlayer: String,
 },
     { timestamps: true },
 )

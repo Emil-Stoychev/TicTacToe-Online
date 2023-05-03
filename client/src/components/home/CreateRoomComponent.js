@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { useNavigate } from 'react-router-dom'
 
 import * as gameService from '../../services/gameService'
 
@@ -8,6 +9,7 @@ export const CreateRoomComponent = ({ cancelRoom }) => {
         gameId: '',
         members: []
     })
+    const navigate = useNavigate()
 
     useEffect(() => {
         gameService.createRoom(localStorage.getItem('sessionStorage'))
@@ -20,6 +22,12 @@ export const CreateRoomComponent = ({ cancelRoom }) => {
                 }
             })
     }, [])
+
+    useEffect(() => {
+        if (room.members.length == 2) {
+            navigate('/game/' + room.gameId)
+        }
+    }, [room.members])
 
     return (
         <>

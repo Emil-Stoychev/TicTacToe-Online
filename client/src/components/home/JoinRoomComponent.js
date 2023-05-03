@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import * as gameService from '../../services/gameService'
 
@@ -8,6 +9,7 @@ export const JoinRoomComponent = ({ guest, cancelRoom }) => {
         gameId: '',
         members: []
     })
+    const navigate = useNavigate()
 
     useEffect(() => {
         if (guest.gameId != '') {
@@ -21,6 +23,12 @@ export const JoinRoomComponent = ({ guest, cancelRoom }) => {
                 })
         }
     }, [])
+
+    useEffect(() => {
+        if (room.members.length == 2) {
+            navigate('/game/' + room.gameId)
+        }
+    }, [room.members])
 
     const changeCodeHandler = (e) => {
         setRoom(state => ({

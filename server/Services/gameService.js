@@ -149,6 +149,36 @@ const leaveRoom = async (userId) => {
     }
 }
 
+
+// GAME LOGIC
+const game = async () => {
+    try {
+
+        /*
+            Board indexes
+            [0] [1] [2]
+            [3] [4] [5]
+            [6] [7] [8]
+        */
+
+        const winningConditions = [
+            [0, 1, 2],
+            [3, 4, 5],
+            [6, 7, 8],
+            [0, 3, 6],
+            [1, 4, 7],
+            [2, 5, 8],
+            [0, 4, 8],
+            [2, 4, 6]
+        ];
+
+
+    } catch (error) {
+        return error
+        console.log(error);
+    }
+}
+
 module.exports = {
     createRoom,
     joinRoom,
