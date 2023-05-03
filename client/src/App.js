@@ -12,28 +12,24 @@ import { LoadingSpinner } from './components/core/loadingSpinner/LoadingSpinner'
 
 import { HomeComponent } from './components/home/Home'
 const LazyGameComponent = lazy(() => import('./components/game/Game'))
-const LazySettingsComponent = lazy(() => import('./components/settings/Settings'))
+const LazySettingsComponent = lazy(() => import('./components/core/settings/Settings'))
+const LazyAboutComponent = lazy(() => import('./components/core/about/About'))
 
 function App() {
-  const [token, setToken] = useState(null)
-  const [soundNotification, setSoundNotification] = useState(false)
-  const [newNot, setNewNot] = useState(0)
   const [onlineUsers, setOnlineUsers] = useState([])
   const socket = useRef(null)
-
-
 
   return (
     <div className="App">
       <Routes>
 
-        <Route path='/' element={<HomeComponent fallback={<LoadingSpinner />} />} />
+        <Route path='/' element={<HomeComponent fallback={<LoadingSpinner />} socket={socket} setOnlineUsers={setOnlineUsers} />} />
 
         <Route path='/game' element={<Suspense fallback={<LoadingSpinner />}><LazyGameComponent /></Suspense>} />
 
         <Route path='/settings' element={<Suspense fallback={<LoadingSpinner />}><LazySettingsComponent /></Suspense>} />
 
-        {/* <Route path='/about' element={<Suspense fallback={<LoadingSpinner />}><LazyAboutComponent /></Suspense>} /> */}
+        <Route path='/about' element={<Suspense fallback={<LoadingSpinner />}><LazyAboutComponent /></Suspense>} />
 
         <Route path='*' element={<PageNotFound />} />
 
