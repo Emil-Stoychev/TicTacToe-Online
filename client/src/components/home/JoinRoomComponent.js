@@ -1,19 +1,21 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import * as gameService from '../../services/gameService'
+import { AuthContext } from '../../context/UserContext'
 
-export const JoinRoomComponent = ({ guest, cancelRoom }) => {
+export const JoinRoomComponent = ({ cancelRoom }) => {
     const [room, setRoom] = useState({
         roomId: '',
         gameId: '',
         members: []
     })
     const navigate = useNavigate()
+    const { user, setUser } = useContext(AuthContext)
 
     useEffect(() => {
-        if (guest.gameId != '') {
-            gameService.joinRoom(localStorage.getItem('sessionStorage'), guest?.gameId)
+        if (user.gameId != '') {
+            gameService.joinRoom(localStorage.getItem('sessionStorage'), user?.gameId)
                 .then(res => {
                     if (!res.message) {
                         setRoom(res)

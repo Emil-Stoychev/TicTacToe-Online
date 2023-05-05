@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { v4 as uuidv4 } from 'uuid'
 import * as gameService from '../../services/gameService'
@@ -9,15 +9,12 @@ import { RandomRoomComponent } from './RandomRoomComponent'
 
 
 import { io } from 'socket.io-client'
+import { AuthContext } from '../../context/UserContext'
+
 
 export const HomeComponent = ({ socket, setOnlineUsers }) => {
-    const [guest, setGuest] = useState({
-        username: '',
-        uuid: '',
-        _id: '',
-        gameId: '',
-        token: null
-    })
+    let { user, setUser } = useContext(AuthContext)
+
     const [gameOption, setGameOption] = useState({
         option: '',
         gameId: '',
@@ -25,7 +22,7 @@ export const HomeComponent = ({ socket, setOnlineUsers }) => {
     const navigate = useNavigate()
 
     const changeUsernameHandler = (e) => {
-        setGuest(state => ({
+        setUser(state => ({
             ...state,
             [e.target.name]: e.target.value
         }))
@@ -38,7 +35,7 @@ export const HomeComponent = ({ socket, setOnlineUsers }) => {
             gameService.getUser(token)
                 .then(res => {
                     if (!res.message) {
-                        setGuest({
+                        setUser({
                             username: res?.username,
                             uuid: res?.uuid,
                             _id: res?._id,
@@ -49,6 +46,13 @@ export const HomeComponent = ({ socket, setOnlineUsers }) => {
                         setGameOption({ option: res?.gameOption || '', gameId: res?.gameId || '' })
                     } else {
                         localStorage.removeItem('sessionStorage')
+                        setUser({
+                            username: '',
+                            uuid: '',
+                            _id: '',
+                            gameId: '',
+                            token: null
+                        })
                         setGameOption({ option: '', gameId: '' })
                         console.log(res);
                     }
@@ -60,36 +64,27 @@ export const HomeComponent = ({ socket, setOnlineUsers }) => {
         window.onload = window.scrollTo(0, 0)
     }
 
-    // useEffect(() => {
-    //     console.log('change...');
-    //     socket.current = io(`http://${window.location.hostname}:3000`)
-    //     socket.current?.emit("newUser", guest?_.id)
-    //     socket.current?.on('get-users', (users) => {
-    //         setOnlineUsers(users)
-    //     })
-    // }, [socket, guest])
-
     useEffect(() => {
-        console.log(guest);
-        if (guest?.token != null) {
+        console.log(user);
+        if (user?.token != null) {
             socket.current = io(`http://${window.location.hostname}:3000`)
-            socket.current?.emit("newUser", guest?._id)
+            socket.current?.emit("newUser", user?._id)
             socket.current?.on('get-users', (users) => {
                 setOnlineUsers(users)
             })
         }
-    }, [guest])
+    }, [user])
 
     const createRoom = (e) => {
         e.preventDefault()
 
-        if (guest.username.length >= 3) {
+        if (user.username.length >= 3) {
             let generatedId = uuidv4()
 
-            gameService.initUser(guest.username, generatedId, 'create')
+            gameService.initUser(user.username, generatedId, 'create')
                 .then(res => {
                     if (!res.message) {
-                        setGuest({
+                        setUser({
                             username: res?.username,
                             uuid: res?.uuid,
                             _id: res?._id,
@@ -103,6 +98,13 @@ export const HomeComponent = ({ socket, setOnlineUsers }) => {
                     } else {
                         setGameOption({ option: '', gameId: '' })
                         localStorage.removeItem('sessionStorage')
+                        setUser({
+                            username: '',
+                            uuid: '',
+                            _id: '',
+                            gameId: '',
+                            token: null
+                        })
                         console.log(res);
                     }
                 })
@@ -114,13 +116,13 @@ export const HomeComponent = ({ socket, setOnlineUsers }) => {
     const joinRoom = (e) => {
         e.preventDefault()
 
-        if (guest.username.length >= 3) {
+        if (user.username.length >= 3) {
             let generatedId = uuidv4()
 
-            gameService.initUser(guest.username, generatedId, 'join')
+            gameService.initUser(user.username, generatedId, 'join')
                 .then(res => {
                     try {
-                        setGuest({
+                        setUser({
                             username: res?.username,
                             uuid: res?.uuid,
                             _id: res?._id,
@@ -134,6 +136,13 @@ export const HomeComponent = ({ socket, setOnlineUsers }) => {
                     } catch (error) {
                         setGameOption({ option: '', gameId: '' })
                         localStorage.removeItem('sessionStorage')
+                        setUser({
+                            username: '',
+                            uuid: '',
+                            _id: '',
+                            gameId: '',
+                            token: null
+                        })
                         console.log(error);
                     }
                 })
@@ -145,13 +154,13 @@ export const HomeComponent = ({ socket, setOnlineUsers }) => {
     const randomRoom = (e) => {
         e.preventDefault()
 
-        if (guest.username.length >= 3) {
+        if (user.username.length >= 3) {
             let generatedId = uuidv4()
 
-            gameService.initUser(guest.username, generatedId, 'random')
+            gameService.initUser(user.username, generatedId, 'random')
                 .then(res => {
                     try {
-                        setGuest({
+                        setUser({
                             username: res?.username,
                             uuid: res?.uuid,
                             _id: res?._id,
@@ -165,6 +174,13 @@ export const HomeComponent = ({ socket, setOnlineUsers }) => {
                     } catch (error) {
                         setGameOption({ option: '', gameId: '' })
                         localStorage.removeItem('sessionStorage')
+                        setUser({
+                            username: '',
+                            uuid: '',
+                            _id: '',
+                            gameId: '',
+                            token: null
+                        })
                         console.log(error);
                     }
                 })
@@ -179,7 +195,7 @@ export const HomeComponent = ({ socket, setOnlineUsers }) => {
             gameId: '',
         })
 
-        setGuest(state => ({
+        setUser(state => ({
             ...state,
             gameId: '',
         }))
@@ -193,7 +209,7 @@ export const HomeComponent = ({ socket, setOnlineUsers }) => {
 
             <form className="loginForm">
                 <label htmlFor="username">Name</label>
-                <input disabled={gameOption.option != ''} id="username" minLength={3} name="username" type="text" placeholder="John" value={guest.username || ''} onChange={(e) => changeUsernameHandler(e)} />
+                <input disabled={gameOption.option != ''} id="username" minLength={3} name="username" type="text" placeholder="John" value={user.username || ''} onChange={(e) => changeUsernameHandler(e)} />
 
                 {gameOption.option == '' &&
                     <div className="createAndJoinRoomBtns">
@@ -206,7 +222,7 @@ export const HomeComponent = ({ socket, setOnlineUsers }) => {
 
             {gameOption.option == 'create' && <CreateRoomComponent cancelRoom={cancelRoom} />}
 
-            {gameOption.option == 'join' && <JoinRoomComponent guest={guest} cancelRoom={cancelRoom} />}
+            {gameOption.option == 'join' && <JoinRoomComponent cancelRoom={cancelRoom} />}
 
             {gameOption.option == 'random' && <RandomRoomComponent cancelRoom={cancelRoom} />}
 
