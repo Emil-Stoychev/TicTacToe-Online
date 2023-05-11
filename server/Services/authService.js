@@ -32,6 +32,16 @@ const getUserByUsernames = async (searchValue) => {
     }
 }
 
+const leaveUser = async (user) => {
+    try {
+        await User.findByIdAndDelete(user?._id)
+
+        return []
+    } catch (error) {
+        return error
+    }
+}
+
 const initUser = async (data) => {
     try {
         let { username, uuid, option = '' } = data
@@ -87,5 +97,6 @@ const initUser = async (data) => {
 module.exports = {
     initUser,
     getUserByUsernames,
-    getUserByToken
+    getUserByToken,
+    leaveUser
 }

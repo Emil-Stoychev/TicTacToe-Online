@@ -17,6 +17,12 @@ router.post('/initUser', async (req, res) => {
     res.json(result)
 })
 
+router.post('/leaveUser/:token', authMiddleware, async (req, res) => {
+    let result = await authService.leaveUser(req.body?.user)
+
+    res.json(result)
+})
+
 router.get('/getUserByUsernames/:token/:searchValue', authMiddleware, async (req, res) => {
     res.json(await authService.getUserByUsernames(req.params.searchValue))
 })

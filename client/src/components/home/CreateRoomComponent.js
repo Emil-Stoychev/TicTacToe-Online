@@ -12,7 +12,7 @@ export const CreateRoomComponent = ({ cancelRoom, socket }) => {
     const navigate = useNavigate()
 
     useEffect(() => {
-        gameService.createRoom(localStorage.getItem('sessionStorage'))
+        gameService.enterRoom(localStorage.getItem('sessionStorage'))
             .then(res => {
                 console.log(res);
                 try {

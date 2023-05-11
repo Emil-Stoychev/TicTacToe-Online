@@ -21,6 +21,17 @@ export const initUser = (username, uuid) => {
         .then(res => res.json())
 }
 
+export const leaveUser = (user) => {
+    return fetch(`${URL}users/leaveUser/${user?.token}`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ user })
+    })
+        .then(res => res.json())
+}
+
 // GAME SERVICE
 
 export const getGame = (gameId, token) => {
@@ -52,36 +63,8 @@ export const setInBoard = (tile, index, currPlayerName, gameId) => {
 
 // ADD GAME TO URL
 
-export const createRoom = (token) => {
-    return fetch(`${URL}game/createRoom/${token}`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify()
-    })
-        .then(res => res.json())
-}
-
-export const joinRoom = (token, gameId, roomId) => {
-    let data = {
-        gameId,
-        roomId
-    }
-
-    return fetch(`${URL}game/joinRoom/${token}`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ data })
-    })
-        .then(res => res.json())
-}
-
-
-export const randomRoom = (token) => {
-    return fetch(`${URL}game/randomRoom/${token}`, {
+export const enterRoom = (token) => {
+    return fetch(`${URL}game/enterRoom/${token}`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"

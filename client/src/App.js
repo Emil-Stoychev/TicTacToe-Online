@@ -26,11 +26,14 @@ function App() {
 
   useEffect(() => {
     if (user?.token != null) {
-      socket.current = io(`http://${window.location.hostname}:3000`)
-      socket.current?.emit("newUser", user?._id)
+      socket.current = io(`http://${window.location.hostname}:3060`)
+      socket.current?.emit("newUser", user)
       socket.current?.on('get-users', (users) => {
-        console.log(users);
         setOnlineUsers(users)
+
+        setTimeout(() => {
+          console.log(onlineUsers);
+        }, 1000);
       })
     }
   }, [user])

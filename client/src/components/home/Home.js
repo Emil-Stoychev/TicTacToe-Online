@@ -64,7 +64,7 @@ export const HomeComponent = ({ socket, setOnlineUsers }) => {
         window.onload = window.scrollTo(0, 0)
     }
 
-    const createRoom = (e) => {
+    const login = (e) => {
         e.preventDefault()
 
         if (user.username.length >= 3) {
@@ -83,7 +83,7 @@ export const HomeComponent = ({ socket, setOnlineUsers }) => {
 
                         localStorage.setItem('sessionStorage', res?.token)
 
-                        setGameOption({ option: 'create', gameId: '' })
+                        setGameOption({ option: '', gameId: '' })
                     } else {
                         setGameOption({ option: '', gameId: '' })
                         localStorage.removeItem('sessionStorage')
@@ -102,65 +102,44 @@ export const HomeComponent = ({ socket, setOnlineUsers }) => {
         }
     }
 
-    const joinRoom = (e) => {
+    const leave = (e) => {
         e.preventDefault()
 
-        if (user.username.length >= 3) {
-            let generatedId = uuidv4()
-
-            gameService.initUser(user.username, generatedId, 'join')
-                .then(res => {
-                    try {
-                        setUser({
-                            username: res?.username,
-                            uuid: res?.uuid,
-                            _id: res?._id,
-                            gameId: '',
-                            token: res?.token
-                        })
-
-                        localStorage.setItem('sessionStorage', res?.token)
-
-                        setGameOption({ option: 'join', gameId: '' })
-                    } catch (error) {
-                        setGameOption({ option: '', gameId: '' })
-                        localStorage.removeItem('sessionStorage')
-                        setUser({
-                            username: '',
-                            uuid: '',
-                            _id: '',
-                            gameId: '',
-                            token: null
-                        })
-                        console.log(error);
-                    }
+        gameService.leaveUser(user)
+            .then(res => {
+                setGameOption({ option: '', gameId: '' })
+                localStorage.removeItem('sessionStorage')
+                setUser({
+                    username: '',
+                    uuid: '',
+                    _id: '',
+                    gameId: '',
+                    token: null
                 })
-        } else {
-            console.log('Username must be at least 3 characters!');
-        }
+            })
     }
 
-    const randomRoom = (e) => {
+    const enterRoom = (e, option) => {
         e.preventDefault()
 
         if (user.username.length >= 3) {
             let generatedId = uuidv4()
 
-            gameService.initUser(user.username, generatedId, 'random')
+            gameService.enterRoom(user.username, generatedId, option)
                 .then(res => {
-                    try {
+                    if (!res.message) {
                         setUser({
                             username: res?.username,
                             uuid: res?.uuid,
                             _id: res?._id,
-                            gameId: '',
+                            gameId: res?.gameId,
                             token: res?.token
                         })
 
                         localStorage.setItem('sessionStorage', res?.token)
 
-                        setGameOption({ option: 'random', gameId: '' })
-                    } catch (error) {
+                        setGameOption({ option: option, gameId: res.gameId })
+                    } else {
                         setGameOption({ option: '', gameId: '' })
                         localStorage.removeItem('sessionStorage')
                         setUser({
@@ -170,7 +149,7 @@ export const HomeComponent = ({ socket, setOnlineUsers }) => {
                             gameId: '',
                             token: null
                         })
-                        console.log(error);
+                        console.log(res);
                     }
                 })
         } else {
@@ -198,13 +177,17 @@ export const HomeComponent = ({ socket, setOnlineUsers }) => {
 
             <form className="loginForm">
                 <label htmlFor="username">Name</label>
-                <input disabled={gameOption.option != ''} id="username" minLength={3} name="username" type="text" placeholder="John" value={user.username || ''} onChange={(e) => changeUsernameHandler(e)} />
+                <input disabled={user.token != null} id="username" minLength={3} name="username" type="text" placeholder="John" value={user.username || ''} onChange={(e) => changeUsernameHandler(e)} />
+                {user.token != null && <button onClick={(e) => leave(e)}>Leave</button>}
 
-                {gameOption.option == '' &&
+                {user.token == null
+                    ? <button onClick={(e) => login(e)}>Play</button>
+                    :
+                    user.gameId == '' &&
                     <div className="createAndJoinRoomBtns">
-                        <button onClick={(e) => createRoom(e)}>Create room</button>
-                        <button onClick={(e) => joinRoom(e)}>Join room</button>
-                        <button onClick={(e) => randomRoom(e)}>Random room</button>
+                        <button onClick={(e) => enterRoom(e, 'create')}>Create room</button>
+                        <button onClick={(e) => enterRoom(e, 'join')}>Join room</button>
+                        <button onClick={(e) => enterRoom(e, 'random')}>Random room</button>
                     </div>
                 }
             </form>

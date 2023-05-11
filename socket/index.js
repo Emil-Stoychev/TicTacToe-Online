@@ -7,8 +7,8 @@ const io = require('socket.io')(3060, {
 
 let activeUsers = []
 
-const addNewUser = (_id, socketId) => {
-    !activeUsers.some((user) => user._id == _id) && activeUsers.push({ _id, socketId })
+const addNewUser = (user, socketId) => {
+    !activeUsers.some((x) => x.user._id == user._id) && activeUsers.push({ user, socketId })
 }
 
 const getUser = (_id) => {
@@ -16,11 +16,10 @@ const getUser = (_id) => {
 }
 
 io.on('connection', (socket) => {
-    socket.on("newUser", (_id) => {
-        addNewUser(_id, socket.id)
+    socket.on("newUser", (user) => {
+        addNewUser(user, socket.id)
         io.emit('get-users', activeUsers)
 
-        console.log('asd');
         console.log('connected', socket.id);
     })
 

@@ -14,7 +14,7 @@ export const RandomRoomComponent = ({ cancelRoom, socket }) => {
     const randomRoomHandler = (e) => {
         e.preventDefault()
 
-        gameService.randomRoom(localStorage.getItem('sessionStorage'))
+        gameService.enterRoom(localStorage.getItem('sessionStorage'))
             .then(res => {
                 if (!res.message) {
                     setRoom(res)

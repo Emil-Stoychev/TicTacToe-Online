@@ -15,7 +15,7 @@ export const JoinRoomComponent = ({ cancelRoom, socket }) => {
 
     useEffect(() => {
         if (user.gameId != '') {
-            gameService.joinRoom(localStorage.getItem('sessionStorage'), user?.gameId)
+            gameService.enterRoom(localStorage.getItem('sessionStorage'), user?.gameId)
                 .then(res => {
                     if (!res.message) {
                         setRoom(res)
@@ -43,7 +43,7 @@ export const JoinRoomComponent = ({ cancelRoom, socket }) => {
         e.preventDefault()
 
         if (room.roomId != '' && room.roomId.length > 3) {
-            gameService.joinRoom(localStorage.getItem('sessionStorage'), room?.gameId, room?.roomId)
+            gameService.enterRoom(localStorage.getItem('sessionStorage'), room?.gameId, room?.roomId)
                 .then(res => {
                     console.log(res);
                     if (!res.message) {
