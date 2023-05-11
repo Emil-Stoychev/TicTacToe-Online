@@ -20,6 +20,7 @@ io.on('connection', (socket) => {
         addNewUser(_id, socket.id)
         io.emit('get-users', activeUsers)
 
+        console.log('asd');
         console.log('connected', socket.id);
     })
 
@@ -48,6 +49,17 @@ io.on('connection', (socket) => {
                 if (user) {
                     io.to(user.socketId).emit('receive-message', data.res)
                 }
+            }
+        }
+    })
+
+    socket.on('update-board', (data) => {
+        if (data != null) {
+            const { receiverId } = data
+            const user = activeUsers.find(x => x._id == receiverId)
+
+            if (user) {
+                io.to(user.socketId).emit('updated-board', data.res)
             }
         }
     })
