@@ -21,6 +21,34 @@ export const initUser = (username, uuid) => {
         .then(res => res.json())
 }
 
+// GAME SERVICE
+
+export const getGame = (gameId, token) => {
+    return fetch(`${URL}game/getGame/${gameId}/${token}`)
+        .then(res => res.json())
+}
+
+export const setInBoard = (tile, index, currPlayerName, gameId) => {
+    let data = {
+        tile,
+        index,
+        currPlayerName,
+        gameId
+    }
+
+    return fetch(`${URL}game/setInBoard`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ data })
+    })
+        .then(res => res.json())
+}
+
+
+
+
 
 // ADD GAME TO URL
 

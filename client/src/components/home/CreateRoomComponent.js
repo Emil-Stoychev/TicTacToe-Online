@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 
 import * as gameService from '../../services/gameService'
 
-export const CreateRoomComponent = ({ cancelRoom }) => {
+export const CreateRoomComponent = ({ cancelRoom, socket }) => {
     const [room, setRoom] = useState({
         roomId: '',
         gameId: '',

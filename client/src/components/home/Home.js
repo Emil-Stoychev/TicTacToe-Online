@@ -64,17 +64,6 @@ export const HomeComponent = ({ socket, setOnlineUsers }) => {
         window.onload = window.scrollTo(0, 0)
     }
 
-    useEffect(() => {
-        console.log(user);
-        if (user?.token != null) {
-            socket.current = io(`http://${window.location.hostname}:3000`)
-            socket.current?.emit("newUser", user?._id)
-            socket.current?.on('get-users', (users) => {
-                setOnlineUsers(users)
-            })
-        }
-    }, [user])
-
     const createRoom = (e) => {
         e.preventDefault()
 
@@ -220,11 +209,11 @@ export const HomeComponent = ({ socket, setOnlineUsers }) => {
                 }
             </form>
 
-            {gameOption.option == 'create' && <CreateRoomComponent cancelRoom={cancelRoom} />}
+            {gameOption.option == 'create' && <CreateRoomComponent cancelRoom={cancelRoom} socket={socket} />}
 
-            {gameOption.option == 'join' && <JoinRoomComponent cancelRoom={cancelRoom} />}
+            {gameOption.option == 'join' && <JoinRoomComponent cancelRoom={cancelRoom} socket={socket} />}
 
-            {gameOption.option == 'random' && <RandomRoomComponent cancelRoom={cancelRoom} />}
+            {gameOption.option == 'random' && <RandomRoomComponent cancelRoom={cancelRoom} socket={socket} />}
 
             {gameOption.option == '' &&
                 <>

@@ -1,5 +1,5 @@
 import { Routes, Route } from 'react-router-dom'
-import { lazy, Suspense, useEffect, useRef, useState } from 'react';
+import { lazy, Suspense, useContext, useEffect, useRef, useState } from 'react';
 import './App.css';
 
 import { io } from 'socket.io-client'
@@ -12,36 +12,47 @@ import { PageNotFound } from './components/core/page-not-found/PageNotFound';
 import { LoadingSpinner } from './components/core/loadingSpinner/LoadingSpinner';
 
 import { HomeComponent } from './components/home/Home'
-import { AuthProvider } from './context/UserContext';
+import { AuthContext } from './context/UserContext';
 
 const LazyGameComponent = lazy(() => import('./components/game/Game'))
 const LazySettingsComponent = lazy(() => import('./components/core/settings/Settings'))
 const LazyAboutComponent = lazy(() => import('./components/core/about/About'))
 
 function App() {
+  let { user, setUser } = useContext(AuthContext)
+
   const [onlineUsers, setOnlineUsers] = useState([])
   const socket = useRef(null)
 
+  useEffect(() => {
+    if (user?.token != null) {
+      socket.current = io(`http://${window.location.hostname}:3000`)
+      socket.current?.emit("newUser", user?._id)
+      socket.current?.on('get-users', (users) => {
+        console.log(users);
+        setOnlineUsers(users)
+      })
+    }
+  }, [user])
+
   return (
-    <AuthProvider>
-      <div className="App">
-        <Routes>
+    <div className="App">
+      <Routes>
 
-          <Route path='/' element={<HomeComponent fallback={<LoadingSpinner />} socket={socket} setOnlineUsers={setOnlineUsers} />} />
+        <Route path='/' element={<HomeComponent fallback={<LoadingSpinner />} socket={socket} setOnlineUsers={setOnlineUsers} />} />
 
-          <Route path='/game/:gameId' element={<Suspense fallback={<LoadingSpinner />}><LazyGameComponent /></Suspense>} />
+        <Route path='/game/:gameId' element={<Suspense fallback={<LoadingSpinner />}><LazyGameComponent socket={socket} /></Suspense>} />
 
-          <Route path='/settings' element={<Suspense fallback={<LoadingSpinner />}><LazySettingsComponent /></Suspense>} />
+        <Route path='/settings' element={<Suspense fallback={<LoadingSpinner />}><LazySettingsComponent /></Suspense>} />
 
-          <Route path='/about' element={<Suspense fallback={<LoadingSpinner />}><LazyAboutComponent /></Suspense>} />
+        <Route path='/about' element={<Suspense fallback={<LoadingSpinner />}><LazyAboutComponent /></Suspense>} />
 
-          <Route path='*' element={<PageNotFound />} />
+        <Route path='*' element={<PageNotFound />} />
 
-        </Routes>
+      </Routes>
 
-        <FooterComponent />
-      </div>
-    </AuthProvider>
+      <FooterComponent />
+    </div>
   );
 }
 

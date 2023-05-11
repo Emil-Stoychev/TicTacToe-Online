@@ -7,6 +7,20 @@ router.get('/', authMiddleware, async (req, res) => {
     res.json(await gameService.getAll())
 })
 
+
+router.get('/getGame/:gameId/:token', authMiddleware, async (req, res) => {
+    res.json(await gameService.getGame(req.params.gameId))
+})
+
+router.post('/setInBoard', async (req, res) => {
+    res.json(await gameService.setInBoard(req.body.data))
+})
+
+
+
+
+
+
 router.post('/createRoom/:token', authMiddleware, async (req, res) => {
     let result = await gameService.createRoom(req.params?.user?._id)
 

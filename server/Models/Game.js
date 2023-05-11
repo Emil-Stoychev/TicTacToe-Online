@@ -13,6 +13,15 @@ const gameSchema = new mongoose.Schema({
         type: Array,
         default: ['', '', '', '', '', '', '', '', '']
     },
+    playerX: {
+        type: Number,
+        default: 0
+    },
+    playerO: {
+        type: Number,
+        default: 0
+    },
+    playerTurn: Number,
     currentPlayer: String,
 },
     { timestamps: true },

@@ -1,12 +1,54 @@
-import { useRef, useState } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 import './style.css'
 
-const GameComponent = () => {
+import * as gameService from '../../services/gameService'
+import { AuthContext } from '../../context/UserContext'
+import { useLocation, useNavigate } from 'react-router-dom'
+
+const GameComponent = ({ socket }) => {
     const [currPlayer, setCurrentPlayer] = useState({
         name: '',
         spanEl: 'X'
     })
+    const [members, setMembers] = useState({
+        firstP: {},
+        secondP: {}
+    })
+    const { user, setUser } = useContext(AuthContext)
+    console.log(socket);
+
+    const [currGame, setCurrGame] = useState({})
     const [board, setBoard] = useState(['', '', '', '', '', '', '', '', ''])
+    const navigate = useNavigate()
+
+
+    useEffect(() => {
+        let gameId = window.location.pathname.split('/game/')[1]
+
+        if (gameId == user?.gameId) {
+            gameService.getGame(gameId, localStorage.getItem('sessionStorage'))
+                .then(res => {
+                    if (!res.message) {
+                        setBoard(res.board)
+                        setCurrGame(res)
+
+                        setMembers({
+                            firstP: res?.members[0],
+                            secondP: res?.members[1],
+                        })
+
+                        setCurrentPlayer({
+                            name: res?.members[0].username,
+                            spanEl: 'X'
+                        })
+                    } else {
+                        navigate('/')
+                    }
+                })
+        } else {
+            navigate('/')
+        }
+    }, [])
 
     const tilesContainer = useRef(null)
     const wonGameText = useRef(null)
@@ -32,6 +74,8 @@ const GameComponent = () => {
         [0, 4, 8],
         [2, 4, 6]
     ];
+
+    console.log(currPlayer);
 
     function resultValidate(currentPlayer) {
         let e
@@ -68,7 +112,11 @@ const GameComponent = () => {
         }
     }
 
-    function setInBoardIndex(tile, index) {
+    // socket.current?.on('receive-message', (data) => {
+    //     setReceivedMessage(data)
+    // })
+
+    async function setInBoardIndex(tile, index) {
 
         console.log(tile);
         console.log(index);
@@ -77,21 +125,24 @@ const GameComponent = () => {
             return
         }
 
-        setBoard(state => state.map((x, i) => {
-            if (i == index) {
-                x = i % 2 == 1 ? 'X' : 'O'
-            }
+        if (currPlayer.name != user?.username) {
+            return
+        }
 
-            return x
-        })
-        )
-
-        resultValidate(currentPlayer)
+        await gameService.setInBoard(currentPlayer, index, currPlayer.name, currGame?._id)
+            .then(res => {
+                setCurrGame(res)
+                setBoard(res.board)
+            })
 
         setCurrentPlayer(state => ({
             ...state,
-            spanEl: currentPlayer
+            spanEl: currPlayer == 'X' ? 'O' : 'X'
         }))
+
+        resultValidate(currentPlayer)
+
+
         // curPlayerSpanEl.setAttribute('class', `player${currentPlayer}`)
         isFilled = Array.from(board).some(x => x == '')
 
@@ -137,6 +188,7 @@ const GameComponent = () => {
         <>
             <section className="title">
                 <h1>Tic Tac Toe</h1>
+                <span>{currGame?.playerX || 0}:{currGame?.playerO || 0}</span>
             </section>
             <section className="display">
                 Player <span className="playerX">{currPlayer.spanEl}</span>'s turn

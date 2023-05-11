@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import * as gameService from '../../services/gameService'
 import { AuthContext } from '../../context/UserContext'
 
-export const JoinRoomComponent = ({ cancelRoom }) => {
+export const JoinRoomComponent = ({ cancelRoom, socket }) => {
     const [room, setRoom] = useState({
         roomId: '',
         gameId: '',

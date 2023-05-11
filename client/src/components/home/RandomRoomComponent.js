@@ -3,14 +3,14 @@ import { useNavigate } from 'react-router-dom'
 
 import * as gameService from '../../services/gameService'
 
-export const RandomRoomComponent = ({ cancelRoom }) => {
+export const RandomRoomComponent = ({ cancelRoom, socket }) => {
     const [room, setRoom] = useState({
         roomId: '',
         gameId: '',
         members: []
     })
     const navigate = useNavigate()
-    
+
     const randomRoomHandler = (e) => {
         e.preventDefault()
 

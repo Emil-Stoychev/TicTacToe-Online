@@ -22,14 +22,17 @@ const createRoom = async (userId) => {
             members: [userId],
             author: userId,
             visible: 'Private',
-            roomId: shortid.generate()
+            roomId: shortid.generate(),
+            playerX: 0,
+            playerO: 0,
+            playerTurn: Math.floor(Math.random() * 2) == 0 ? 0 : 1
         })
 
         user.gameId = newRoom?._id
         user.gameOption = 'create'
         user.save()
 
-        return { gameId: newRoom?._id, members: newRoom?.members, roomId: newRoom?.roomId }
+        return await Game.findById(newRoom._id)
     } catch (error) {
         console.error(error)
         return error
@@ -71,7 +74,7 @@ const joinRoom = async (userId, data) => {
         user.gameOption = 'join'
         user.save()
 
-        return { gameId: gameRoom?._id, members: gameRoom?.members, roomId: gameRoom?.roomId }
+        return await Game.findById(gameRoom._id)
     } catch (error) {
         console.error(error)
         return error
@@ -87,9 +90,7 @@ const randomRoom = async (userId) => {
         }
 
         if (user.gameId != undefined && user.gameId != '') {
-            let game = await Game.findById(user.gameId)
-
-            return { gameId: game?._id, members: game?.members, roomId: game?.roomId }
+            return await Game.findById(user.gameId)
         }
 
         let gameRoom = await Game.findOne({ visible: 'Public', members: { $size: 1 } })
@@ -102,20 +103,23 @@ const randomRoom = async (userId) => {
             gameRoom.members.push(user?._id)
             gameRoom.save()
 
-            return { gameId: gameRoom?._id, members: gameRoom?.members, roomId: gameRoom?.roomId }
+            return await Game.findById(gameRoom._id)
         }
 
         let newRoom = await Game.create({
             members: [userId],
             author: userId,
             visible: 'Public',
+            playerX: 0,
+            playerO: 0,
+            playerTurn: Math.floor(Math.random() * 2) == 0 ? 0 : 1
         })
 
         user.gameId = newRoom?._id
         user.gameOption = 'random'
         user.save()
 
-        return { gameId: newRoom?._id, members: newRoom?.members }
+        return await Game.findById(newRoom._id)
     } catch (error) {
         console.error(error)
         return error
@@ -151,6 +155,107 @@ const leaveRoom = async (userId) => {
 
 
 // GAME LOGIC
+
+const getGame = async (gameId) => {
+    try {
+        let game = await Game.findById(gameId).populate('members')
+
+        if (!game) {
+            return { message: 'Game not found!' }
+        }
+
+        return game
+    } catch (error) {
+        console.log(error);
+        return error
+    }
+}
+
+const setInBoard = async (data) => {
+    try {
+        let { tile, index, currPlayerName, gameId } = data
+
+        let game = await Game.findById(gameId).populate('members')
+
+        if (!game) {
+            return { message: 'Game not found!' }
+        }
+
+        game.board = game.board.map((x, i) => {
+            if (i == index) {
+                x = tile
+            }
+
+            return x
+        })
+
+        let gameEnd = await resultValidate(gameId)
+
+        if (gameEnd) {
+            game.board = ['', '', '', '', '', '', '', '', '']
+
+            if (tile == 'X') {
+                game.playerX++
+            } else {
+                game.playerO++
+            }
+        }
+
+        await game.save()
+
+        return await Game.findById(gameId).populate('members')
+    } catch (error) {
+        console.log(error);
+        return error
+    }
+}
+
+async function resultValidate(gameId) {
+    let game = await Game.findById(gameId)
+
+    let roundWin = false
+
+    const winningConditions = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6]
+    ];
+
+    let e
+    let s
+    let r
+
+    for (let i = 0; i <= 7; i++) {
+        let winCondition = winningConditions[i]
+        let a = game.board[winCondition[0]]
+        let b = game.board[winCondition[1]]
+        let c = game.board[winCondition[2]]
+
+        if (a == '' || b == '' || c == '') {
+            continue
+        }
+
+        if (a == b && b == c) {
+            roundWin = true
+            e = winCondition[0]
+            s = winCondition[1]
+            r = winCondition[2]
+            break
+        }
+    }
+
+    if (roundWin) {
+        return true
+    } else {
+        return false
+    }
+}
+
 const game = async () => {
     try {
 
@@ -183,6 +288,8 @@ module.exports = {
     createRoom,
     joinRoom,
     randomRoom,
-    leaveRoom
+    leaveRoom,
+    getGame,
+    setInBoard
 }
 
