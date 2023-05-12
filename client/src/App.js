@@ -30,13 +30,18 @@ function App() {
       socket.current?.emit("newUser", user)
       socket.current?.on('get-users', (users) => {
         setOnlineUsers(users)
-
-        setTimeout(() => {
-          console.log(onlineUsers);
-        }, 1000);
       })
+
+
+      return () => {
+        socket.current.disconnect()
+      }
     }
   }, [user])
+
+  useEffect(() => {
+    console.log(onlineUsers);
+  }, [onlineUsers])
 
   return (
     <div className="App">

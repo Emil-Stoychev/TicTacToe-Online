@@ -15,7 +15,6 @@ const GameComponent = ({ socket }) => {
         secondP: {}
     })
     const { user, setUser } = useContext(AuthContext)
-    console.log(socket);
 
     const [currGame, setCurrGame] = useState({})
     const [board, setBoard] = useState(['', '', '', '', '', '', '', '', ''])

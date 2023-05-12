@@ -107,6 +107,7 @@ export const HomeComponent = ({ socket, setOnlineUsers }) => {
 
         gameService.leaveUser(user)
             .then(res => {
+                setOnlineUsers(state => state.filter(x => x.user._id != user._id))
                 setGameOption({ option: '', gameId: '' })
                 localStorage.removeItem('sessionStorage')
                 setUser({
@@ -170,6 +171,24 @@ export const HomeComponent = ({ socket, setOnlineUsers }) => {
 
         gameService.leaveRoom(localStorage.getItem('sessionStorage'))
     }
+
+
+    // SEND AND RECEIVE MESSAGES
+    // useEffect(() => {
+    //     socket.current?.emit('send-message', sendMessage)
+    //     if (sendMessage != null) {
+    //       setCurrChatOnTop(sendMessage?.res?.chatId || sendMessage?.chatId)
+    //     }
+    //   }, [sendMessage])
+
+    //   useEffect(() => {
+    //     socket.current?.on('receive-message', (data) => {
+    //       setReceivedMessage(data)
+    //     })
+    //     if (receivedMessage != null) {
+    //       setCurrChatOnTop(receivedMessage?.chatId)
+    //     }
+    //   }, [receivedMessage])
 
     return (
         <>
