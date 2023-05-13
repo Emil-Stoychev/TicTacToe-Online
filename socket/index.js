@@ -6,6 +6,7 @@ const io = require('socket.io')(3060, {
 })
 
 let activeUsers = []
+let activeGames = []
 
 const addNewUser = (user, socketId) => {
     !activeUsers.some((x) => x.user._id == user._id) && activeUsers.push({ user, socketId })

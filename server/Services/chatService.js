@@ -51,33 +51,27 @@ const findChat = async (firstId, secondId) => {
     }
 }
 
-const addMessage = async (chatId, senderId, text, image) => {
+const addMessage = async (message, senderId) => {
     try {
-        let imageData
+        let chat = await Chat.find()
 
-        if (image) {
-            imageData = await createImage(senderId, image)
+        console.log(chat);
+
+        if (!chat[0]?.container) {
+            chat = await Chat.create({
+                container: []
+            })
         }
 
-        const message = new MessageModel({
-            chatId,
+        await chat[0].container.push({
+            chatId: chat[0]._id,
             senderId,
-            text,
-            image: imageData?._id || undefined
+            text: message,
         })
 
-        let newMessage = await message.save()
+        await chat[0].save()
 
-        let currChat = await Chat.findByIdAndUpdate(chatId, { $set: { updatedAt: new Date() } })
-
-        // await User.findByIdAndUpdate(currChat.members[0], { $pull: { chat: chatId } })
-        // await User.findByIdAndUpdate(currChat.members[1], { $pull: { chat: chatId } })
-
-        // await User.findByIdAndUpdate(currChat.members[0], { $push: { chat: chatId } })
-        // await User.findByIdAndUpdate(currChat.members[1], { $push: { chat: chatId } })
-
-        return await MessageModel.findById(newMessage._id)
-            .populate('image', ['thumbnail'])
+        return chat[0]
     } catch (error) {
         console.error(error)
         return error

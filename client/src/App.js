@@ -47,7 +47,7 @@ function App() {
     <div className="App">
       <Routes>
 
-        <Route path='/' element={<HomeComponent fallback={<LoadingSpinner />} socket={socket} setOnlineUsers={setOnlineUsers} />} />
+        <Route path='/' element={<HomeComponent fallback={<LoadingSpinner />} socket={socket} setOnlineUsers={setOnlineUsers} onlineUsers={onlineUsers} />} />
 
         <Route path='/game/:gameId' element={<Suspense fallback={<LoadingSpinner />}><LazyGameComponent socket={socket} /></Suspense>} />
 

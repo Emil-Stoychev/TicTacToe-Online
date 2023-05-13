@@ -63,13 +63,13 @@ export const setInBoard = (tile, index, currPlayerName, gameId) => {
 
 // ADD GAME TO URL
 
-export const enterRoom = (token) => {
+export const enterRoom = (token, option) => {
     return fetch(`${URL}game/enterRoom/${token}`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify()
+        body: JSON.stringify({ option: option })
     })
         .then(res => res.json())
 }
@@ -81,6 +81,21 @@ export const leaveRoom = (token) => {
             "Content-Type": "application/json"
         },
         body: JSON.stringify()
+    })
+        .then(res => res.json())
+}
+
+
+
+// CHAT SERVICES
+
+export const sendMessage = (token, message) => {
+    return fetch(`${URL}chat/sendMessage/${token}`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ message })
     })
         .then(res => res.json())
 }

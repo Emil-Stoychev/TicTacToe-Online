@@ -12,8 +12,10 @@ import { io } from 'socket.io-client'
 import { AuthContext } from '../../context/UserContext'
 
 
-export const HomeComponent = ({ socket, setOnlineUsers }) => {
+export const HomeComponent = ({ socket, setOnlineUsers, onlineUsers }) => {
     let { user, setUser } = useContext(AuthContext)
+    const [messages, setMessages] = useState([])
+    let [currMessage, setCurrMessage] = useState('')
 
     const [gameOption, setGameOption] = useState({
         option: '',
@@ -123,39 +125,24 @@ export const HomeComponent = ({ socket, setOnlineUsers }) => {
     const enterRoom = (e, option) => {
         e.preventDefault()
 
-        if (user.username.length >= 3) {
-            let generatedId = uuidv4()
+        gameService.enterRoom(localStorage.getItem('sessionStorage'), option)
+            .then(res => {
+                if (!res.message) {
+                    setUser(state => ({
+                        ...state,
+                        gameId: res?.gameId,
+                    }))
 
-            gameService.enterRoom(user.username, generatedId, option)
-                .then(res => {
-                    if (!res.message) {
-                        setUser({
-                            username: res?.username,
-                            uuid: res?.uuid,
-                            _id: res?._id,
-                            gameId: res?.gameId,
-                            token: res?.token
-                        })
-
-                        localStorage.setItem('sessionStorage', res?.token)
-
-                        setGameOption({ option: option, gameId: res.gameId })
-                    } else {
-                        setGameOption({ option: '', gameId: '' })
-                        localStorage.removeItem('sessionStorage')
-                        setUser({
-                            username: '',
-                            uuid: '',
-                            _id: '',
-                            gameId: '',
-                            token: null
-                        })
-                        console.log(res);
-                    }
-                })
-        } else {
-            console.log('Username must be at least 3 characters!');
-        }
+                    setGameOption({ option: option, gameId: res.gameId })
+                } else {
+                    setUser(state => ({
+                        ...state,
+                        gameId: '',
+                    }))
+                    setGameOption({ option: '', gameId: '' })
+                    console.log(res);
+                }
+            })
     }
 
     const cancelRoom = (e) => {
@@ -170,6 +157,18 @@ export const HomeComponent = ({ socket, setOnlineUsers }) => {
         }))
 
         gameService.leaveRoom(localStorage.getItem('sessionStorage'))
+    }
+
+
+    const sendMessage = (e) => {
+        if (currMessage != '' && currMessage.length != 0 && currMessage.trim() != '') {
+            gameService.sendMessage(localStorage.getItem('sessionStorage'), currMessage)
+                .then(res => {
+                    // setMessages(res.container)
+                })
+        } else {
+            console.log('Type smth');
+        }
     }
 
 
@@ -193,6 +192,8 @@ export const HomeComponent = ({ socket, setOnlineUsers }) => {
     return (
         <>
             <h2>Tic Tac Toe Online</h2>
+
+            {user.token != null && <h2>Online players: {onlineUsers.length}</h2>}
 
             <form className="loginForm">
                 <label htmlFor="username">Name</label>
@@ -222,6 +223,20 @@ export const HomeComponent = ({ socket, setOnlineUsers }) => {
                     <button onClick={() => navigate('/settings')}>Settings</button>
                     <button onClick={() => navigate('/about')}>About</button>
                 </>
+            }
+
+            {user.token != null &&
+                <div className='chat-section'>
+                    <div className='body'>
+                        {messages.length == 0
+                            ? <h2>No messages yet!</h2>
+                            : messages.map(x => <h5 key={x}>{x}</h5>)}
+                    </div>
+                    <div className='chat-send'>
+                        <input type='text' value={currMessage} onChange={(e) => setCurrMessage(e.target.value)} placeholder='Type your message here...' />
+                        <button onClick={() => sendMessage()}>Send</button>
+                    </div>
+                </div >
             }
         </>
     )
