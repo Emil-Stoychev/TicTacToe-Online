@@ -99,3 +99,8 @@ export const sendMessage = (token, message) => {
     })
         .then(res => res.json())
 }
+
+export const getMessages = (skipNumber = 0) => {
+    return fetch(`${URL}chat/messages/${skipNumber}`)
+        .then(res => res.json())
+}

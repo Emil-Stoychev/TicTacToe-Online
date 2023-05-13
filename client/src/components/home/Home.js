@@ -15,6 +15,8 @@ import { AuthContext } from '../../context/UserContext'
 export const HomeComponent = ({ socket, setOnlineUsers, onlineUsers }) => {
     let { user, setUser } = useContext(AuthContext)
     const [messages, setMessages] = useState([])
+    const [receivedMessage, setReceivedMessage] = useState(null)
+    const [newMessage, setNewMessage] = useState(null)
     let [currMessage, setCurrMessage] = useState('')
 
     const [gameOption, setGameOption] = useState({
@@ -60,6 +62,9 @@ export const HomeComponent = ({ socket, setOnlineUsers, onlineUsers }) => {
                     }
                 })
         }
+
+        gameService.getMessages(0)
+            .then(res => setMessages(res))
     }, [])
 
     const goToTop = () => {
@@ -159,12 +164,14 @@ export const HomeComponent = ({ socket, setOnlineUsers, onlineUsers }) => {
         gameService.leaveRoom(localStorage.getItem('sessionStorage'))
     }
 
-
     const sendMessage = (e) => {
         if (currMessage != '' && currMessage.length != 0 && currMessage.trim() != '') {
             gameService.sendMessage(localStorage.getItem('sessionStorage'), currMessage)
                 .then(res => {
-                    // setMessages(res.container)
+                    setMessages(res)
+                    setNewMessage({ _id: user?._id, text: currMessage, socketId: socket.current.id })
+
+                    setCurrMessage('')
                 })
         } else {
             console.log('Type smth');
@@ -173,21 +180,16 @@ export const HomeComponent = ({ socket, setOnlineUsers, onlineUsers }) => {
 
 
     // SEND AND RECEIVE MESSAGES
-    // useEffect(() => {
-    //     socket.current?.emit('send-message', sendMessage)
-    //     if (sendMessage != null) {
-    //       setCurrChatOnTop(sendMessage?.res?.chatId || sendMessage?.chatId)
-    //     }
-    //   }, [sendMessage])
+    useEffect(() => {
+        socket.current?.emit('send-message', newMessage)
+    }, [sendMessage])
 
-    //   useEffect(() => {
-    //     socket.current?.on('receive-message', (data) => {
-    //       setReceivedMessage(data)
-    //     })
-    //     if (receivedMessage != null) {
-    //       setCurrChatOnTop(receivedMessage?.chatId)
-    //     }
-    //   }, [receivedMessage])
+    useEffect(() => {
+        socket.current?.on('receive-message', (data) => {
+            console.log(data);
+            setReceivedMessage(data)
+        })
+    }, [receivedMessage])
 
     return (
         <>
@@ -230,7 +232,7 @@ export const HomeComponent = ({ socket, setOnlineUsers, onlineUsers }) => {
                     <div className='body'>
                         {messages.length == 0
                             ? <h2>No messages yet!</h2>
-                            : messages.map(x => <h5 key={x}>{x}</h5>)}
+                            : messages.map(x => <h5 key={x._id}>{x.senderId}: {x.text}</h5>)}
                     </div>
                     <div className='chat-send'>
                         <input type='text' value={currMessage} onChange={(e) => setCurrMessage(e.target.value)} placeholder='Type your message here...' />

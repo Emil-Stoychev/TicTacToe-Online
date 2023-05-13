@@ -35,21 +35,9 @@ io.on('connection', (socket) => {
     })
 
     socket.on('send-message', (data) => {
+        console.log(data);
         if (data != null) {
-            if (data?.type == 'delete') {
-                const user = activeUsers.find(x => x._id == data.receiverId)
-
-                if (user) {
-                    io.to(user.socketId).emit('receive-message', { msgId: data.msgId, type: data.type, chatId: data.chatId })
-                }
-            } else {
-                const { receiverId } = data
-                const user = activeUsers.find(x => x._id == receiverId)
-
-                if (user) {
-                    io.to(user.socketId).emit('receive-message', data.res)
-                }
-            }
+            activeUsers.forEach(x => io.to(x.socketId != data.socketId).emit('receive-message', data.res))
         }
     })
 

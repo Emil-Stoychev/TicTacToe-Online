@@ -1,6 +1,8 @@
 const { User } = require("../Models/User.js")
 const { Chat } = require("../Models/Chat.js")
 
+const { v4 } = require('uuid')
+
 const createChat = async (senderId, receiverId) => {
     try {
         let currChat = await findChat(senderId, receiverId)
@@ -55,15 +57,14 @@ const addMessage = async (message, senderId) => {
     try {
         let chat = await Chat.find()
 
-        console.log(chat);
-
-        if (!chat[0]?.container) {
+        if (chat[0]?.container == undefined) {
             chat = await Chat.create({
                 container: []
             })
         }
 
-        await chat[0].container.push({
+        chat[0]?.container.push({
+            _id: v4(),
             chatId: chat[0]._id,
             senderId,
             text: message,
@@ -71,22 +72,28 @@ const addMessage = async (message, senderId) => {
 
         await chat[0].save()
 
-        return chat[0]
+        return chat[0].container
     } catch (error) {
         console.error(error)
         return error
     }
 }
 
-const getMessages = async (chatId, skipNumber) => {
+const getMessages = async (skipNumber) => {
     try {
-        let result = await MessageModel.find({ chatId })
-            .populate('image', ['thumbnail'])
-            .sort({ createdAt: -1 })
-            .skip(skipNumber)
-            .limit(10)
+        let chat = await Chat.find()
 
-        return result.reverse()
+        if (chat[0]?.container == undefined) {
+            chat = await Chat.create({
+                container: []
+            })
+        }
+
+        // .sort({ createdAt: -1 })
+        // .skip(skipNumber)
+        // .limit(10)
+
+        return chat[0]?.container
     } catch (error) {
         console.error(error)
         return error

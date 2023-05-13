@@ -8,8 +8,9 @@ router.post('/sendMessage/:token', authMiddleware, async (req, res) => {
 
     return res.status(200).json(result) || res.status(500).json(result)
 })
-router.get('/message/:chatId/:skipNumber', async (req, res) => {
-    let result = await getMessages(req.params.chatId, req.params.skipNumber)
+
+router.get('/messages/:skipNumber', async (req, res) => {
+    let result = await getMessages(req.params.skipNumber)
 
     return res.status(200).json(result) || res.status(500).json(result)
 })
