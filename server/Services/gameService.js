@@ -6,11 +6,14 @@ const shortid = require('shortid')
 
 const enterRoom = async (option, userId) => {
     try {
-        console.log(userId, option);
         let user = await User.findById(userId)
 
         if (!user) {
             return { message: 'User not found!' }
+        }
+
+        if (option == undefined) {
+            option = user.gameOption
         }
 
         if (option == 'create') {
@@ -34,7 +37,7 @@ const enterRoom = async (option, userId) => {
             user.gameOption = 'create'
             user.save()
 
-            return await Game.findById(newRoom._id)
+            return newRoom
         } else if (option == 'join') {
             let gameRoom
             if (data.roomId) {

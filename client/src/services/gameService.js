@@ -69,7 +69,7 @@ export const enterRoom = (token, option) => {
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify({ option: option })
+        body: JSON.stringify({ text: option })
     })
         .then(res => res.json())
 }

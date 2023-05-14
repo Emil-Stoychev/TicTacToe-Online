@@ -72,8 +72,6 @@ export const HomeComponent = ({ socket, setOnlineUsers, onlineUsers }) => {
 
         gameService.getMessages(0)
             .then(res => {
-                console.log('Messages:');
-                console.log(res)
                 setMessages(res)
             })
     }, [])
@@ -143,6 +141,7 @@ export const HomeComponent = ({ socket, setOnlineUsers, onlineUsers }) => {
 
         gameService.enterRoom(localStorage.getItem('sessionStorage'), option)
             .then(res => {
+                console.log(res);
                 if (!res.message) {
                     setUser(state => ({
                         ...state,

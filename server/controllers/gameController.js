@@ -17,7 +17,7 @@ router.post('/setInBoard', async (req, res) => {
 })
 
 router.post('/enterRoom/:token', authMiddleware, async (req, res) => {
-    let result = await gameService.enterRoom(req.body?.option, req.params?.user?._id)
+    let result = await gameService.enterRoom(req.body?.text, req.params?.user?._id)
 
     res.json(result)
 })
