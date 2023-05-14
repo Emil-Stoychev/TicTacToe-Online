@@ -57,6 +57,12 @@ const addMessage = async (message, senderId) => {
     try {
         let chat = await Chat.find()
 
+        let user = await User.findById(senderId)
+
+        if (!user._id) {
+            return { message: 'User does not exist' }
+        }
+
         if (chat[0]?.container == undefined) {
             chat = await Chat.create({
                 container: []
@@ -64,6 +70,7 @@ const addMessage = async (message, senderId) => {
         }
 
         chat[0]?.container.push({
+            senderName: user.username,
             _id: v4(),
             chatId: chat[0]._id,
             senderId,

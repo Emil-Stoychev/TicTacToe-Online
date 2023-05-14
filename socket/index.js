@@ -37,7 +37,12 @@ io.on('connection', (socket) => {
     socket.on('send-message', (data) => {
         console.log(data);
         if (data != null) {
-            activeUsers.forEach(x => io.to(x.socketId != data.socketId).emit('receive-message', data.res))
+            activeUsers.forEach((x, i) => {
+                console.log(i);
+                if (x.socketId != data.socketId) {
+                    io.to(x.socketId).emit('receive-message', data)
+                }
+            })
         }
     })
 

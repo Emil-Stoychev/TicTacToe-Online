@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react'
+import { useState, useEffect, useContext, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { v4 as uuidv4 } from 'uuid'
 import * as gameService from '../../services/gameService'
@@ -24,6 +24,13 @@ export const HomeComponent = ({ socket, setOnlineUsers, onlineUsers }) => {
         gameId: '',
     })
     const navigate = useNavigate()
+    const sendMessageBtn = useRef(null)
+
+    const onEnterClick = (e) => {
+        if (e.key == 'Enter') {
+            sendMessage(e)
+        }
+    }
 
     const changeUsernameHandler = (e) => {
         setUser(state => ({
@@ -169,7 +176,7 @@ export const HomeComponent = ({ socket, setOnlineUsers, onlineUsers }) => {
             gameService.sendMessage(localStorage.getItem('sessionStorage'), currMessage)
                 .then(res => {
                     setMessages(res)
-                    setNewMessage({ _id: user?._id, text: currMessage, socketId: socket.current.id })
+                    setNewMessage({ senderId: user?._id, text: currMessage, socketId: socket.current.id, _id: uuidv4(), senderName: user?.username })
 
                     setCurrMessage('')
                 })
@@ -181,14 +188,22 @@ export const HomeComponent = ({ socket, setOnlineUsers, onlineUsers }) => {
 
     // SEND AND RECEIVE MESSAGES
     useEffect(() => {
-        socket.current?.emit('send-message', newMessage)
+        if (newMessage != null) {
+            socket.current?.emit('send-message', newMessage)
+
+            setNewMessage(null)
+        }
     }, [sendMessage])
 
+
+    socket.current?.on('receive-message', (data) => {
+        setReceivedMessage(data)
+    })
+
     useEffect(() => {
-        socket.current?.on('receive-message', (data) => {
-            console.log(data);
-            setReceivedMessage(data)
-        })
+        if (receivedMessage != null) {
+            setMessages(state => [...state, receivedMessage])
+        }
     }, [receivedMessage])
 
     return (
@@ -232,11 +247,11 @@ export const HomeComponent = ({ socket, setOnlineUsers, onlineUsers }) => {
                     <div className='body'>
                         {messages.length == 0
                             ? <h2>No messages yet!</h2>
-                            : messages.map(x => <h5 key={x._id}>{x.senderId}: {x.text}</h5>)}
+                            : messages.map(x => <h5 key={x._id}>{x.senderName}: {x.text}</h5>)}
                     </div>
                     <div className='chat-send'>
-                        <input type='text' value={currMessage} onChange={(e) => setCurrMessage(e.target.value)} placeholder='Type your message here...' />
-                        <button onClick={() => sendMessage()}>Send</button>
+                        <input type='text' onKeyDown={onEnterClick} value={currMessage} onChange={(e) => setCurrMessage(e.target.value)} placeholder='Type your message here...' />
+                        <button ref={sendMessageBtn} onClick={sendMessage}>✓</button>
                     </div>
                 </div >
             }
