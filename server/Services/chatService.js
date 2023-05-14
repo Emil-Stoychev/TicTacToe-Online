@@ -69,17 +69,19 @@ const addMessage = async (message, senderId) => {
             })
         }
 
-        chat[0]?.container.push({
+        let msg = {
             senderName: user.username,
             _id: v4(),
             chatId: chat[0]._id,
             senderId,
             text: message,
-        })
+        }
+
+        chat[0]?.container.push(msg)
 
         await chat[0].save()
 
-        return chat[0].container
+        return msg
     } catch (error) {
         console.error(error)
         return error
@@ -89,18 +91,24 @@ const addMessage = async (message, senderId) => {
 const getMessages = async (skipNumber) => {
     try {
         let chat = await Chat.find()
+        let num = 0
 
         if (chat[0]?.container == undefined) {
             chat = await Chat.create({
                 container: []
             })
+            num++
         }
 
         // .sort({ createdAt: -1 })
         // .skip(skipNumber)
         // .limit(10)
 
-        return chat[0]?.container
+        if (num == 0) {
+            return chat[0]?.container.slice(chat[0]?.container.length - 7)
+        } else {
+            return chat[0]?.container
+        }
     } catch (error) {
         console.error(error)
         return error

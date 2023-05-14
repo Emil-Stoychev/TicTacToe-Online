@@ -71,7 +71,11 @@ export const HomeComponent = ({ socket, setOnlineUsers, onlineUsers }) => {
         }
 
         gameService.getMessages(0)
-            .then(res => setMessages(res))
+            .then(res => {
+                console.log('Messages:');
+                console.log(res)
+                setMessages(res)
+            })
     }, [])
 
     const goToTop = () => {
@@ -175,10 +179,16 @@ export const HomeComponent = ({ socket, setOnlineUsers, onlineUsers }) => {
         if (currMessage != '' && currMessage.length != 0 && currMessage.trim() != '') {
             gameService.sendMessage(localStorage.getItem('sessionStorage'), currMessage)
                 .then(res => {
-                    setMessages(res)
-                    setNewMessage({ senderId: user?._id, text: currMessage, socketId: socket.current.id, _id: uuidv4(), senderName: user?.username })
+                    if (!res.message) {
+                        setMessages(state => [...state, res])
+                        res.socketId = socket.current.id
 
-                    setCurrMessage('')
+                        setNewMessage(res)
+
+                        setCurrMessage('')
+                    } else {
+                        console.log(res);
+                    }
                 })
         } else {
             console.log('Type smth');
