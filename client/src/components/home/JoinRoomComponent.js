@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import * as gameService from '../../services/gameService'
 import { AuthContext } from '../../context/UserContext'
 
-export const JoinRoomComponent = ({ cancelRoom, socket }) => {
+export const JoinRoomComponent = ({ cancelRoom, socket, gameOption }) => {
     const [room, setRoom] = useState({
         roomId: '',
         gameId: '',
@@ -15,7 +15,11 @@ export const JoinRoomComponent = ({ cancelRoom, socket }) => {
 
     useEffect(() => {
         if (user.gameId != '') {
-            gameService.enterRoom(localStorage.getItem('sessionStorage'), user?.gameId)
+            let data = {
+                option: user?.gameOption || undefined
+            }
+
+            gameService.enterRoom(localStorage.getItem('sessionStorage'), data)
                 .then(res => {
                     if (!res.message) {
                         setRoom(res)
@@ -42,8 +46,13 @@ export const JoinRoomComponent = ({ cancelRoom, socket }) => {
     const joinRoomHandler = (e) => {
         e.preventDefault()
 
+        let data = {
+            option: gameOption.option || undefined,
+            roomId: room.roomId || ''
+        }
+
         if (room.roomId != '' && room.roomId.length > 3) {
-            gameService.enterRoom(localStorage.getItem('sessionStorage'), room?.gameId, room?.roomId)
+            gameService.enterRoom(localStorage.getItem('sessionStorage'), data)
                 .then(res => {
                     console.log(res);
                     if (!res.message) {

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 
 import * as gameService from '../../services/gameService'
 
-export const CreateRoomComponent = ({ cancelRoom, socket }) => {
+export const CreateRoomComponent = ({ cancelRoom, socket, gameOption }) => {
     const [room, setRoom] = useState({
         roomId: '',
         gameId: '',
@@ -12,7 +12,12 @@ export const CreateRoomComponent = ({ cancelRoom, socket }) => {
     const navigate = useNavigate()
 
     useEffect(() => {
-        gameService.enterRoom(localStorage.getItem('sessionStorage'))
+
+        let data = {
+            option: gameOption.option || undefined
+        }
+
+        gameService.enterRoom(localStorage.getItem('sessionStorage'), data)
             .then(res => {
                 console.log(res);
                 try {

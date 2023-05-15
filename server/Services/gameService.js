@@ -4,7 +4,7 @@ const { Chat } = require('../Models/Chat')
 
 const shortid = require('shortid')
 
-const enterRoom = async (option, userId) => {
+const enterRoom = async (data, userId) => {
     try {
         let user = await User.findById(userId)
 
@@ -12,11 +12,11 @@ const enterRoom = async (option, userId) => {
             return { message: 'User not found!' }
         }
 
-        if (option == undefined) {
-            option = user.gameOption
+        if (data?.option == undefined) {
+            data.option = user.gameOption
         }
 
-        if (option == 'create') {
+        if (data?.option == 'create') {
             let gameRoom = await Game.findById(user?.gameId)
 
             if (gameRoom) {
@@ -38,12 +38,13 @@ const enterRoom = async (option, userId) => {
             user.save()
 
             return newRoom
-        } else if (option == 'join') {
+        } else if (data?.option == 'join') {
             let gameRoom
+
             if (data.roomId) {
                 gameRoom = await Game.findOne({ roomId: data?.roomId })
             } else {
-                gameRoom = await Game.findById(data?.gameId)
+                gameRoom = await Game.findById(user?.gameId)
             }
 
 
@@ -60,14 +61,14 @@ const enterRoom = async (option, userId) => {
             }
 
             gameRoom.members.push(user?._id)
-            gameRoom.save()
+            await gameRoom.save()
 
             user.gameId = gameRoom?._id
             user.gameOption = 'join'
-            user.save()
+            await user.save()
 
-            return await Game.findById(gameRoom._id)
-        } else if (option == 'random') {
+            return gameRoom
+        } else if (data?.option == 'random') {
             if (user.gameId != undefined && user.gameId != '') {
                 return await Game.findById(user.gameId)
             }
@@ -80,9 +81,9 @@ const enterRoom = async (option, userId) => {
                 user.save()
 
                 gameRoom.members.push(user?._id)
-                gameRoom.save()
+                await gameRoom.save()
 
-                return await Game.findById(gameRoom._id)
+                return gameRoom
             }
 
             let newRoom = await Game.create({
@@ -98,7 +99,7 @@ const enterRoom = async (option, userId) => {
             user.gameOption = 'random'
             user.save()
 
-            return await Game.findById(newRoom._id)
+            return newRoom
         }
     } catch (error) {
         console.error(error)
@@ -124,9 +125,9 @@ const leaveRoom = async (userId) => {
 
         user.gameOption = ''
         user.gameId = undefined
-        user.save()
+        await user.save()
 
-        return {}
+        return user
     } catch (error) {
         console.log(error);
         return error

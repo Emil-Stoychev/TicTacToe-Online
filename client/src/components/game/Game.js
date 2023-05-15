@@ -49,6 +49,22 @@ const GameComponent = ({ socket }) => {
         }
     }, [])
 
+    const leaveRoom = (e) => {
+        gameService.leaveRoom(localStorage.getItem('sessionStorage'))
+            .then(res => {
+                console.log(res);
+                if (!res.message) {
+                    setUser(state => ({
+                        ...state,
+                        [state.gameOption]: '',
+                        [state.gameId]: undefined
+                    }))
+                } else {
+                    console.log(res);
+                }
+            })
+    }
+
     const tilesContainer = useRef(null)
     const wonGameText = useRef(null)
     let roundWin
@@ -196,6 +212,8 @@ const GameComponent = ({ socket }) => {
                 {board.map((x, i) => <div key={i} onClick={() => setInBoardIndex(x, i)} className="tile">{x}</div>)}
             </section>
             <section id="wonGameText" ref={wonGameText} className="display hide"></section>
+
+            <button onClick={(e) => leaveRoom(e)}>Leave</button>
         </>
     )
 }

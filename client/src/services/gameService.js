@@ -63,13 +63,13 @@ export const setInBoard = (tile, index, currPlayerName, gameId) => {
 
 // ADD GAME TO URL
 
-export const enterRoom = (token, option) => {
+export const enterRoom = (token, data) => {
     return fetch(`${URL}game/enterRoom/${token}`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify({ text: option })
+        body: JSON.stringify({ data })
     })
         .then(res => res.json())
 }

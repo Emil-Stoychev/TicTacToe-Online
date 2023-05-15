@@ -139,16 +139,26 @@ export const HomeComponent = ({ socket, setOnlineUsers, onlineUsers }) => {
     const enterRoom = (e, option) => {
         e.preventDefault()
 
-        gameService.enterRoom(localStorage.getItem('sessionStorage'), option)
+        let data = {
+            option,
+        }
+
+        if (option == 'join') {
+            setGameOption({ option: 'join', gameId: '' })
+
+            return
+        }
+
+        gameService.enterRoom(localStorage.getItem('sessionStorage'), data)
             .then(res => {
                 console.log(res);
                 if (!res.message) {
                     setUser(state => ({
                         ...state,
-                        gameId: res?.gameId,
+                        gameId: res?._id,
                     }))
 
-                    setGameOption({ option: option, gameId: res.gameId })
+                    setGameOption({ option: option, gameId: res._id })
                 } else {
                     setUser(state => ({
                         ...state,
@@ -238,11 +248,11 @@ export const HomeComponent = ({ socket, setOnlineUsers, onlineUsers }) => {
                 }
             </form>
 
-            {gameOption.option == 'create' && <CreateRoomComponent cancelRoom={cancelRoom} socket={socket} />}
+            {gameOption.option == 'create' && <CreateRoomComponent cancelRoom={cancelRoom} socket={socket} gameOption={gameOption} />}
 
-            {gameOption.option == 'join' && <JoinRoomComponent cancelRoom={cancelRoom} socket={socket} />}
+            {gameOption.option == 'join' && <JoinRoomComponent cancelRoom={cancelRoom} socket={socket} gameOption={gameOption} />}
 
-            {gameOption.option == 'random' && <RandomRoomComponent cancelRoom={cancelRoom} socket={socket} />}
+            {gameOption.option == 'random' && <RandomRoomComponent cancelRoom={cancelRoom} socket={socket} gameOption={gameOption} />}
 
             {gameOption.option == '' &&
                 <>
