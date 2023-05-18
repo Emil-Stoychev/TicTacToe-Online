@@ -22,6 +22,7 @@ function App() {
   let { user, setUser } = useContext(AuthContext)
 
   const [onlineUsers, setOnlineUsers] = useState([])
+  const [onlineGames, setOnlineGames] = useState([])
   const socket = useRef(null)
 
   useEffect(() => {
@@ -31,7 +32,9 @@ function App() {
       socket.current?.on('get-users', (users) => {
         setOnlineUsers(users)
       })
-
+      socket.current?.on('get-allGames', (games) => {
+        setOnlineGames(games)
+      })
 
       return () => {
         socket.current.disconnect()
@@ -40,14 +43,26 @@ function App() {
   }, [user])
 
   useEffect(() => {
+    console.log('<>ONLINE USERS<>');
     console.log(onlineUsers);
   }, [onlineUsers])
+
+  useEffect(() => {
+    console.log('<>ONLINE GAMES<>');
+    console.log(onlineGames);
+  }, [onlineGames])
 
   return (
     <div className="App">
       <Routes>
 
-        <Route path='/' element={<HomeComponent fallback={<LoadingSpinner />} socket={socket} setOnlineUsers={setOnlineUsers} onlineUsers={onlineUsers} />} />
+        <Route path='/' element={<HomeComponent fallback={<LoadingSpinner />}
+          socket={socket}
+          setOnlineUsers={setOnlineUsers}
+          onlineUsers={onlineUsers}
+          onlineGames={onlineGames}
+          setOnlineGames={setOnlineGames}
+        />} />
 
         <Route path='/game/:gameId' element={<Suspense fallback={<LoadingSpinner />}><LazyGameComponent socket={socket} /></Suspense>} />
 

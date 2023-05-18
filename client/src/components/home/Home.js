@@ -12,7 +12,7 @@ import { io } from 'socket.io-client'
 import { AuthContext } from '../../context/UserContext'
 
 
-export const HomeComponent = ({ socket, setOnlineUsers, onlineUsers }) => {
+export const HomeComponent = ({ socket, setOnlineUsers, onlineUsers, onlineGames, setOnlineGames }) => {
     let { user, setUser } = useContext(AuthContext)
     const [messages, setMessages] = useState([])
     const [receivedMessage, setReceivedMessage] = useState(null)
@@ -151,7 +151,6 @@ export const HomeComponent = ({ socket, setOnlineUsers, onlineUsers }) => {
 
         gameService.enterRoom(localStorage.getItem('sessionStorage'), data)
             .then(res => {
-                console.log(res);
                 if (!res.message) {
                     setUser(state => ({
                         ...state,
@@ -171,6 +170,10 @@ export const HomeComponent = ({ socket, setOnlineUsers, onlineUsers }) => {
     }
 
     const cancelRoom = (e) => {
+        socket.current?.emit('remove-game', (gameOption) => {
+            setOnlineGames(state => state.filter(x => x?.room?.roomId != gameOption.gameId))
+        })
+
         setGameOption({
             option: '',
             gameId: '',
@@ -203,7 +206,6 @@ export const HomeComponent = ({ socket, setOnlineUsers, onlineUsers }) => {
             console.log('Type smth');
         }
     }
-
 
     // SEND AND RECEIVE MESSAGES
     useEffect(() => {
@@ -248,11 +250,11 @@ export const HomeComponent = ({ socket, setOnlineUsers, onlineUsers }) => {
                 }
             </form>
 
-            {gameOption.option == 'create' && <CreateRoomComponent cancelRoom={cancelRoom} socket={socket} gameOption={gameOption} />}
+            {gameOption.option == 'create' && <CreateRoomComponent cancelRoom={cancelRoom} socket={socket} gameOption={gameOption} onlineGames={onlineGames} setOnlineGames={setOnlineGames} />}
 
-            {gameOption.option == 'join' && <JoinRoomComponent cancelRoom={cancelRoom} socket={socket} gameOption={gameOption} />}
+            {gameOption.option == 'join' && <JoinRoomComponent cancelRoom={cancelRoom} socket={socket} gameOption={gameOption} onlineGames={onlineGames} setOnlineGames={setOnlineGames} />}
 
-            {gameOption.option == 'random' && <RandomRoomComponent cancelRoom={cancelRoom} socket={socket} gameOption={gameOption} />}
+            {gameOption.option == 'random' && <RandomRoomComponent cancelRoom={cancelRoom} socket={socket} gameOption={gameOption} onlineGames={onlineGames} setOnlineGames={setOnlineGames} />}
 
             {gameOption.option == '' &&
                 <>

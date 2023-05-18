@@ -1,15 +1,18 @@
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { useNavigate } from 'react-router-dom'
 
 import * as gameService from '../../services/gameService'
+import { AuthContext } from "../../context/UserContext"
 
-export const CreateRoomComponent = ({ cancelRoom, socket, gameOption }) => {
+export const CreateRoomComponent = ({ cancelRoom, socket, gameOption, onlineGames, setOnlineGames }) => {
     const [room, setRoom] = useState({
         roomId: '',
         gameId: '',
         members: []
     })
+    const [newGame, setNewGame] = useState(null)
     const navigate = useNavigate()
+    const { user, setUser } = useContext(AuthContext)
 
     useEffect(() => {
 
@@ -19,7 +22,6 @@ export const CreateRoomComponent = ({ cancelRoom, socket, gameOption }) => {
 
         gameService.enterRoom(localStorage.getItem('sessionStorage'), data)
             .then(res => {
-                console.log(res);
                 try {
                     setRoom(res)
                 } catch (error) {
@@ -33,6 +35,33 @@ export const CreateRoomComponent = ({ cancelRoom, socket, gameOption }) => {
             navigate('/game/' + room.gameId)
         }
     }, [room.members])
+
+    // CREATE GAME
+    useEffect(() => {
+        console.log('HERE');
+        console.log(gameOption);
+        
+        
+        if (gameOption.option != undefined && gameOption.option != '') {
+            socket.current?.emit('new-game', { room, socketId: socket.current.id })
+        }
+    }, [gameOption])
+
+    socket.current?.on('get-game', (data) => {
+        console.log('GET GAME DATA');
+        console.log(data);
+        setNewGame(data)
+    })
+
+    useEffect(() => {
+        if (newGame != null) {
+            let existGame = onlineGames.find(x => x?.room?.gameId == newGame?.room?.gameId)
+
+            if (!existGame) {
+                setOnlineGames(state => [...state, newGame])
+            }
+        }
+    }, [newGame])
 
     return (
         <>
