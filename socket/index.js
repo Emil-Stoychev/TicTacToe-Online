@@ -19,17 +19,25 @@ const getUser = (_id) => {
 }
 
 const addNewGame = (room, socketId) => {
-    return !activeGames.some((x) => x.room.gameId == room.gameId) && activeGames.push({ room, socketId })
+    return !activeGames.some((x) => x.room._id == room._id) && activeGames.push({ room, socketId })
 }
 
-const removeGame = (gameId, socketId) => {
-    let currUser = activeUsers.find(x => x.socketId == socketId)
+const joinNewUserToGame = (room, userId) => {
+    activeGames = activeGames.map((x) => {
+        if (x.room._id == room._id) {
+            x.room.members.push(userId)
+        }
 
+        return x
+    })
+}
+
+const removeGame = (gameId, socketId, userId) => {
     activeGames = activeGames.filter(x => {
-        if (x.room.gameId == gameId) {
-            if (x.room.members.length > 1) {
-                if (x.room.members.includes(currUser.user._id)) {
-                    x.room.members = x.room.members.filter(currUser.user._id)
+        if (x.room._id == gameId) {
+            if (x.room.members.includes(userId)) {
+                if (x.room.members.length > 1) {
+                    x.room.members = x.room.members.filter(y => y != userId)
 
                     return x
                 }
@@ -41,7 +49,7 @@ const removeGame = (gameId, socketId) => {
 }
 
 const getGame = (gameId) => {
-    return activeGames.find((game) => game.room.gameId == gameId)
+    return activeGames.find((game) => game.room._id == gameId)
 }
 
 io.on('connection', (socket) => {
@@ -54,41 +62,83 @@ io.on('connection', (socket) => {
     })
 
     socket.on("new-game", (room) => {
-        console.log('STARTING!!!');
-        console.log(room);
-
-        let game = getGame(room.gameId)
+        let game = getGame(room._id || room.gameId)
 
         if (game) {
             io.emit('get-game', game)
+
+            console.log('return game', socket.id);
 
             return
         }
 
         addNewGame(room, socket.id)
-        let createdGame = getGame(room.gameId)
+        game = getGame(room._id)
 
-        io.emit('get-game', createdGame)
-
-        // if (game) {
-        //     game.members.forEach(x => {
-        //         if (x.socketId == socketId) {
-        //             io.to(x.socketId).emit('get-game', room)
-        //         }
-        //     })
-        // }
+        io.emit('get-game', game)
 
         console.log('game created', socket.id);
     })
 
-    socket.on("remove-game", ({ gameId }) => {
-        removeGame(gameId, socket.id)
+    socket.on("join-game", ({ room, userId }) => {
+        let game = getGame(room._id || room.gameId)
 
-        activeUsers.forEach((x) => {
-            io.to(x.socketId).emit('get-allGames', activeGames)
-        })
+        if (game) {
+            if (game.room.members.includes(userId)) {
 
-        console.log(`Game with id: ${gameId} was removed!`);
+                activeUsers.forEach(x => {
+                    if (game.room.members.includes(x.user._id)) {
+                        io.to(x.socketId).emit('get-game', game)
+                    }
+                })
+
+                console.log('u already exist in this room', socket.id);
+
+                return
+            }
+
+            if (game.room.members.length < 2) {
+                joinNewUserToGame(room, userId)
+
+                console.log(game);
+
+                activeUsers.forEach(x => {
+                    if (game.room.members.includes(x.user._id)) {
+                        io.to(x.socketId).emit('get-game', game)
+                    }
+                })
+
+                console.log('join successfully', socket.id);
+
+                return
+            }
+
+            return { message: 'Game does not exist!' }
+        }
+    })
+
+    socket.on("remove-game", ({ gameId, userId }) => {
+        removeGame(gameId, socket.id, userId)
+        let game = getGame(gameId)
+
+        console.log(game);
+
+        if (game != null || game != undefined) {
+            activeUsers.forEach((x) => {
+                if (game.room.members.includes(x.user._id)) {
+                    io.to(x.socketId).emit('get-game', game)
+                }
+            })
+
+            console.log(`User left the game with id: ${gameId}!`);
+        } else {
+            activeUsers.forEach((x) => {
+                io.to(x.socketId).emit('get-allGames', activeGames)
+            })
+
+            console.log(`Game with id: ${gameId} was removed!`);
+        }
+
     })
 
     socket.on("sendNotification", ({ senderId, receiverId }) => {

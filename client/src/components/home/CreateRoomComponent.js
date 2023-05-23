@@ -7,7 +7,7 @@ import { AuthContext } from "../../context/UserContext"
 export const CreateRoomComponent = ({ cancelRoom, socket, gameOption, setGameOption, onlineGames, setOnlineGames }) => {
     const [room, setRoom] = useState({
         roomId: '',
-        gameId: '',
+        _id: '',
         members: []
     })
     const [newGame, setNewGame] = useState(null)
@@ -24,7 +24,7 @@ export const CreateRoomComponent = ({ cancelRoom, socket, gameOption, setGameOpt
             .then(res => {
                 if (!res.message) {
                     setRoom(res.newRoom)
-                    setGameOption({ option: res.userGameOption, gameId: res.newRoom.gameId })
+                    setGameOption({ option: res.userGameOption, _id: res.newRoom._id })
                 } else {
                     console.log(res);
                 }
@@ -34,7 +34,7 @@ export const CreateRoomComponent = ({ cancelRoom, socket, gameOption, setGameOpt
     useEffect(() => {
         if (room.members.length == 2) {
             console.log('NOW ROOM IS FULL');
-            // navigate('/game/' + room?.gameId)
+            // navigate('/game/' + room?._id)
         }
     }, [room.members])
 
@@ -51,10 +51,20 @@ export const CreateRoomComponent = ({ cancelRoom, socket, gameOption, setGameOpt
 
     useEffect(() => {
         if (newGame != null) {
-            let existGame = onlineGames.find(x => x?.room?.gameId == newGame?.room?.gameId)
+            let existGame = onlineGames?.find(x => x?.room?._id == newGame?.room?._id)
 
             if (!existGame) {
+                setRoom(newGame.room)
                 setOnlineGames(state => [...state, newGame])
+            } else {
+                setRoom(newGame.room)
+                setOnlineGames(state => state.map(x => {
+                    if (x.room._id == newGame.room._id) {
+                        return newGame
+                    }
+
+                    return x
+                }))
             }
         }
     }, [newGame])
@@ -69,7 +79,7 @@ export const CreateRoomComponent = ({ cancelRoom, socket, gameOption, setGameOpt
 
             <div className="createAndJoinRoomBtns">
                 <h2>{room.members.map(x => `${x}, `)}</h2>
-                <button onClick={(e) => cancelRoom(e, gameOption?.gameId)}>Cancel</button>
+                <button onClick={(e) => cancelRoom(e, room?._id)}>Cancel</button>
             </div>
         </>
     )

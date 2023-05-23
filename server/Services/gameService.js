@@ -20,7 +20,7 @@ const enterRoom = async (data, userId) => {
             let gameRoom = await Game.findById(user?.gameId)
 
             if (gameRoom) {
-                return { newRoom: { gameId: gameRoom?._id, members: gameRoom?.members, roomId: gameRoom?.roomId }, userGameOption: user.gameOption }
+                return { newRoom: gameRoom, userGameOption: user.gameOption }
             }
 
             let newRoom = await Game.create({
@@ -53,7 +53,7 @@ const enterRoom = async (data, userId) => {
             }
 
             if (gameRoom.members.includes(user._id)) {
-                return { gameId: gameRoom?._id, members: gameRoom?.members, roomId: gameRoom?.roomId }
+                return { newRoom: gameRoom, userGameOption: user.gameOption }
             }
 
             if (gameRoom.members.length >= 2) {
@@ -67,7 +67,7 @@ const enterRoom = async (data, userId) => {
             user.gameOption = 'join'
             await user.save()
 
-            return gameRoom
+            return { newRoom: gameRoom, userGameOption: user.gameOption }
         } else if (data?.option == 'random') {
             if (user.gameId != undefined && user.gameId != '') {
                 return await Game.findById(user.gameId)

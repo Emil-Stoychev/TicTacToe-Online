@@ -170,9 +170,9 @@ export const HomeComponent = ({ socket, setOnlineUsers, onlineUsers, onlineGames
     }
 
     const cancelRoom = (e, gameId) => {
-        socket.current?.emit('remove-game', { gameId: gameId })
+        socket.current?.emit('remove-game', { gameId: gameId, userId: user._id })
 
-        setOnlineGames(state => state.filter(x => x?.room?.roomId != gameOption.gameId))
+        // setOnlineGames(state => state.filter(x => x?.room?.roomId != gameOption.gameId))
 
         setGameOption({
             option: '',
