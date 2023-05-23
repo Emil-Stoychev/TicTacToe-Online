@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import * as gameService from '../../services/gameService'
 import { AuthContext } from "../../context/UserContext"
 
-export const CreateRoomComponent = ({ cancelRoom, socket, gameOption, onlineGames, setOnlineGames }) => {
+export const CreateRoomComponent = ({ cancelRoom, socket, gameOption, setGameOption, onlineGames, setOnlineGames }) => {
     const [room, setRoom] = useState({
         roomId: '',
         gameId: '',
@@ -22,34 +22,30 @@ export const CreateRoomComponent = ({ cancelRoom, socket, gameOption, onlineGame
 
         gameService.enterRoom(localStorage.getItem('sessionStorage'), data)
             .then(res => {
-                try {
-                    setRoom(res)
-                } catch (error) {
-                    console.log(error);
+                if (!res.message) {
+                    setRoom(res.newRoom)
+                    setGameOption({ option: res.userGameOption, gameId: res.newRoom.gameId })
+                } else {
+                    console.log(res);
                 }
             })
     }, [])
 
     useEffect(() => {
         if (room.members.length == 2) {
-            navigate('/game/' + room.gameId)
+            console.log('NOW ROOM IS FULL');
+            // navigate('/game/' + room?.gameId)
         }
     }, [room.members])
 
     // CREATE GAME
     useEffect(() => {
-        console.log('HERE');
-        console.log(gameOption);
-        
-        
         if (gameOption.option != undefined && gameOption.option != '') {
-            socket.current?.emit('new-game', { room, socketId: socket.current.id })
+            socket.current?.emit('new-game', room)
         }
     }, [gameOption])
 
     socket.current?.on('get-game', (data) => {
-        console.log('GET GAME DATA');
-        console.log(data);
         setNewGame(data)
     })
 
@@ -73,7 +69,7 @@ export const CreateRoomComponent = ({ cancelRoom, socket, gameOption, onlineGame
 
             <div className="createAndJoinRoomBtns">
                 <h2>{room.members.map(x => `${x}, `)}</h2>
-                <button onClick={(e) => cancelRoom(e)}>Cancel</button>
+                <button onClick={(e) => cancelRoom(e, gameOption?.gameId)}>Cancel</button>
             </div>
         </>
     )

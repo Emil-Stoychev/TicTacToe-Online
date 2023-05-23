@@ -169,10 +169,10 @@ export const HomeComponent = ({ socket, setOnlineUsers, onlineUsers, onlineGames
             })
     }
 
-    const cancelRoom = (e) => {
-        socket.current?.emit('remove-game', (gameOption) => {
-            setOnlineGames(state => state.filter(x => x?.room?.roomId != gameOption.gameId))
-        })
+    const cancelRoom = (e, gameId) => {
+        socket.current?.emit('remove-game', { gameId: gameId })
+
+        setOnlineGames(state => state.filter(x => x?.room?.roomId != gameOption.gameId))
 
         setGameOption({
             option: '',
@@ -250,11 +250,11 @@ export const HomeComponent = ({ socket, setOnlineUsers, onlineUsers, onlineGames
                 }
             </form>
 
-            {gameOption.option == 'create' && <CreateRoomComponent cancelRoom={cancelRoom} socket={socket} gameOption={gameOption} onlineGames={onlineGames} setOnlineGames={setOnlineGames} />}
+            {gameOption.option == 'create' && <CreateRoomComponent cancelRoom={cancelRoom} socket={socket} gameOption={gameOption} setGameOption={setGameOption} onlineGames={onlineGames} setOnlineGames={setOnlineGames} />}
 
-            {gameOption.option == 'join' && <JoinRoomComponent cancelRoom={cancelRoom} socket={socket} gameOption={gameOption} onlineGames={onlineGames} setOnlineGames={setOnlineGames} />}
+            {gameOption.option == 'join' && <JoinRoomComponent cancelRoom={cancelRoom} socket={socket} gameOption={gameOption} setGameOption={setGameOption} onlineGames={onlineGames} setOnlineGames={setOnlineGames} />}
 
-            {gameOption.option == 'random' && <RandomRoomComponent cancelRoom={cancelRoom} socket={socket} gameOption={gameOption} onlineGames={onlineGames} setOnlineGames={setOnlineGames} />}
+            {gameOption.option == 'random' && <RandomRoomComponent cancelRoom={cancelRoom} socket={socket} gameOption={gameOption} setGameOption={setGameOption} onlineGames={onlineGames} setOnlineGames={setOnlineGames} />}
 
             {gameOption.option == '' &&
                 <>

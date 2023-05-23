@@ -19,15 +19,29 @@ const getUser = (_id) => {
 }
 
 const addNewGame = (room, socketId) => {
-    !activeGames.some((x) => x.socketId == socketId) && activeGames.push({ room, socketId })
+    return !activeGames.some((x) => x.room.gameId == room.gameId) && activeGames.push({ room, socketId })
 }
 
-const removeGame = (roomId, socketId) => {
-    activeGames = activeGames.filter((x) => x.socketId != socketId)
+const removeGame = (gameId, socketId) => {
+    let currUser = activeUsers.find(x => x.socketId == socketId)
+
+    activeGames = activeGames.filter(x => {
+        if (x.room.gameId == gameId) {
+            if (x.room.members.length > 1) {
+                if (x.room.members.includes(currUser.user._id)) {
+                    x.room.members = x.room.members.filter(currUser.user._id)
+
+                    return x
+                }
+            }
+        } else {
+            return x
+        }
+    })
 }
 
-const getGame = (socketId) => {
-    return activeGames.find((game) => game.socketId == socketId)
+const getGame = (gameId) => {
+    return activeGames.find((game) => game.room.gameId == gameId)
 }
 
 io.on('connection', (socket) => {
@@ -36,25 +50,23 @@ io.on('connection', (socket) => {
         io.emit('get-users', activeUsers)
         io.emit('get-allGames', activeGames)
 
-        console.log(activeGames);
-
         console.log('connected', socket.id);
     })
 
-    socket.on("new-game", ({ room, socketId }) => {
-
+    socket.on("new-game", (room) => {
+        console.log('STARTING!!!');
         console.log(room);
-        console.log(socketId);
 
-        let game = getGame(socketId)
+        let game = getGame(room.gameId)
 
         if (game) {
             io.emit('get-game', game)
 
             return
         }
-        addNewGame(room, socketId)
-        let createdGame = getGame(socketId)
+
+        addNewGame(room, socket.id)
+        let createdGame = getGame(room.gameId)
 
         io.emit('get-game', createdGame)
 
@@ -69,16 +81,14 @@ io.on('connection', (socket) => {
         console.log('game created', socket.id);
     })
 
-    socket.on("remove-game", (gameOption) => {
-        console.log('REMOVING GAMES...');
-        console.log(gameOption);
-        const removedGame = removeGame(gameOption?.gameId, socket.id)
+    socket.on("remove-game", ({ gameId }) => {
+        removeGame(gameId, socket.id)
 
         activeUsers.forEach((x) => {
             io.to(x.socketId).emit('get-allGames', activeGames)
         })
 
-        console.log(`Game with id: ${gameOption?.gameId} was removed!`);
+        console.log(`Game with id: ${gameId} was removed!`);
     })
 
     socket.on("sendNotification", ({ senderId, receiverId }) => {

@@ -20,7 +20,7 @@ const enterRoom = async (data, userId) => {
             let gameRoom = await Game.findById(user?.gameId)
 
             if (gameRoom) {
-                return { gameId: gameRoom?._id, members: gameRoom?.members, roomId: gameRoom?.roomId }
+                return { newRoom: { gameId: gameRoom?._id, members: gameRoom?.members, roomId: gameRoom?.roomId }, userGameOption: user.gameOption }
             }
 
             let newRoom = await Game.create({
@@ -37,7 +37,7 @@ const enterRoom = async (data, userId) => {
             user.gameOption = 'create'
             user.save()
 
-            return newRoom
+            return { newRoom, userGameOption: user.gameOption }
         } else if (data?.option == 'join') {
             let gameRoom
 
