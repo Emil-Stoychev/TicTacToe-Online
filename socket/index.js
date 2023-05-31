@@ -34,10 +34,10 @@ const joinNewUserToGame = (room, userId) => {
 
 const removeGame = (gameId, socketId, userId) => {
     activeGames = activeGames.filter(x => {
-        if (x.room._id == gameId) {
+        if (x.room._id.toString() == gameId.toString()) {
             if (x.room.members.includes(userId)) {
                 if (x.room.members.length > 1) {
-                    x.room.members = x.room.members.filter(y => y != userId)
+                    x.room.members = x.room.members.filter(y => y.toString() != userId)
 
                     return x
                 }

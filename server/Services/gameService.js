@@ -117,18 +117,16 @@ const leaveRoom = async (userId) => {
 
         let game = await Game.findById(user.gameId)
 
-        console.log(user);
-        console.log(game);
-
         if (game) {
-            if (game.members.length > 1) {
-                game.members = game.members.filter(x => x != user?._id)
-                game.author = game.members[0]
+            if (game.members.length == 2) {
+                if (game.author.toString() == user._id.toString()) {
+                    let anotherUser = game.members.find(x => x.toString() != game?.author.toString())
 
-                console.log('inside');
-                console.log(game);
-
-                await game.save()
+                    await Game.findByIdAndUpdate(user?.gameId, { $pull: { members: user?._id }, author: anotherUser })
+                    await User.findByIdAndUpdate(anotherUser, { gameOption: 'create' })
+                } else {
+                    await Game.findByIdAndUpdate(user?.gameId, { $pull: { members: user?._id } })
+                }
             } else {
                 await Game.findByIdAndDelete(user?.gameId)
             }
