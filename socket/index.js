@@ -37,6 +37,11 @@ const removeGame = (gameId, socketId, userId) => {
         if (x.room._id.toString() == gameId.toString()) {
             if (x.room.members.includes(userId)) {
                 if (x.room.members.length > 1) {
+                    if (x.author == userId) {
+                        let anotherPerson = x.room.members.find(x => x.toString() != userId)
+
+                        x.room.author = anotherPerson.toString()
+                    }
                     x.room.members = x.room.members.filter(y => y.toString() != userId)
 
                     return x
@@ -76,6 +81,7 @@ io.on('connection', (socket) => {
         game = getGame(room._id)
 
         io.emit('get-game', game)
+        socket.broadcast.emit('get-allGames', activeGames)
 
         console.log('game created', socket.id);
     })
@@ -173,14 +179,10 @@ io.on('connection', (socket) => {
         let currUser = activeUsers.find(x => x.socketId == socket.id)
         activeGames = activeGames.filter(x => {
             if (x.room.members.includes(currUser?.user?._id)) {
-                if (x.room.members.length > 1) {
-                    console.log(x.room.members);
-                    x.room.members = x.room.members.filter(x => x != currUser.user._id)
+                if (x.room.members.length == 2) {
+                    x.room.members = x.room.members.filter(x => x.toString() != currUser.user._id.toString())
 
-                    console.log(x.room.members);
-                    let anotherPlayer = activeUsers.find(y => y.user._id == x.room.members[0])
-                    console.log('anotherPlayer');
-                    console.log(anotherPlayer);
+                    let anotherPlayer = activeUsers.find(y => y.user._id == x.room.members[0].toString())
                     io.to(anotherPlayer.socketId).emit('get-game', x)
 
                     return x
