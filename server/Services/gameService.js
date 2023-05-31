@@ -115,12 +115,23 @@ const leaveRoom = async (userId) => {
             return { message: 'User not found!' }
         }
 
-        await Game.findByIdAndUpdate(user.gameId, { $pull: { members: user._id } })
+        let game = await Game.findById(user.gameId)
 
-        let isEmptyRoom = await Game.findById(user.gameId)
+        console.log(user);
+        console.log(game);
 
-        if (isEmptyRoom.members.length == 0) {
-            await Game.findByIdAndDelete(user.gameId)
+        if (game) {
+            if (game.members.length > 1) {
+                game.members = game.members.filter(x => x != user?._id)
+                game.author = game.members[0]
+
+                console.log('inside');
+                console.log(game);
+
+                await game.save()
+            } else {
+                await Game.findByIdAndDelete(user?.gameId)
+            }
         }
 
         user.gameOption = ''

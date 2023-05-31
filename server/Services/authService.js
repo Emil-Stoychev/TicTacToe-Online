@@ -34,7 +34,22 @@ const getUserByUsernames = async (searchValue) => {
 
 const leaveUser = async (user) => {
     try {
-        await User.findByIdAndDelete(user?._id)
+        let currUser = await User.findById(user?._id)
+
+        let game = await Game.findById(currUser?.gameId)
+
+        if (game) {
+            if (game.members.length > 1) {
+                game.members = game.members.filter(x => x != user?._id)
+                game.author = game.members[0]
+
+                await game.save()
+            } else {
+                await Game.findByIdAndDelete(currUser?.gameId)
+            }
+        }
+
+        await User.findByIdAndDelete(currUser?._id)
 
         return []
     } catch (error) {

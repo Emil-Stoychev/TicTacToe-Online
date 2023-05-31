@@ -170,6 +170,25 @@ io.on('connection', (socket) => {
     })
 
     socket.on('disconnect', () => {
+        let currUser = activeUsers.find(x => x.socketId == socket.id)
+        activeGames = activeGames.filter(x => {
+            if (x.room.members.includes(currUser?.user?._id)) {
+                if (x.room.members.length > 1) {
+                    console.log(x.room.members);
+                    x.room.members = x.room.members.filter(x => x != currUser.user._id)
+
+                    console.log(x.room.members);
+                    let anotherPlayer = activeUsers.find(y => y.user._id == x.room.members[0])
+                    console.log('anotherPlayer');
+                    console.log(anotherPlayer);
+                    io.to(anotherPlayer.socketId).emit('get-game', x)
+
+                    return x
+                }
+            } else {
+                return x
+            }
+        })
         activeUsers = activeUsers.filter(x => x.socketId != socket.id)
         io.emit('get-users', activeUsers)
 
