@@ -4,12 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import * as gameService from '../../services/gameService'
 import { AuthContext } from "../../context/UserContext"
 
-export const CreateRoomComponent = ({ cancelRoom, socket, gameOption, setGameOption, onlineGames, setOnlineGames }) => {
-    const [room, setRoom] = useState({
-        roomId: '',
-        _id: '',
-        members: []
-    })
+export const CreateRoomComponent = ({ cancelRoom, socket, gameOption, setGameOption, onlineGames, setOnlineGames, setRoom, room }) => {
     const [newGame, setNewGame] = useState(null)
     const navigate = useNavigate()
     const { user, setUser } = useContext(AuthContext)

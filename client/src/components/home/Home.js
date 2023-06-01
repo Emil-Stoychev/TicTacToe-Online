@@ -18,6 +18,11 @@ export const HomeComponent = ({ socket, setOnlineUsers, onlineUsers, onlineGames
     const [receivedMessage, setReceivedMessage] = useState(null)
     const [newMessage, setNewMessage] = useState(null)
     let [currMessage, setCurrMessage] = useState('')
+    const [room, setRoom] = useState({
+        roomId: '',
+        _id: '',
+        members: []
+    })
 
     const [gameOption, setGameOption] = useState({
         option: '',
@@ -125,6 +130,11 @@ export const HomeComponent = ({ socket, setOnlineUsers, onlineUsers, onlineGames
             .then(res => {
                 setOnlineUsers(state => state.filter(x => x.user._id != user._id))
                 setGameOption({ option: '', gameId: '' })
+                setRoom({
+                    roomId: '',
+                    _id: '',
+                    members: []
+                })
                 localStorage.removeItem('sessionStorage')
                 setUser({
                     username: '',
@@ -179,10 +189,18 @@ export const HomeComponent = ({ socket, setOnlineUsers, onlineUsers, onlineGames
             gameId: '',
         })
 
+        setRoom({
+            roomId: '',
+            _id: '',
+            members: []
+        })
+
         setUser(state => ({
             ...state,
             gameId: '',
         }))
+
+
 
         gameService.leaveRoom(localStorage.getItem('sessionStorage'))
     }
@@ -250,11 +268,38 @@ export const HomeComponent = ({ socket, setOnlineUsers, onlineUsers, onlineGames
                 }
             </form>
 
-            {gameOption.option == 'create' && <CreateRoomComponent cancelRoom={cancelRoom} socket={socket} gameOption={gameOption} setGameOption={setGameOption} onlineGames={onlineGames} setOnlineGames={setOnlineGames} />}
+            {gameOption.option == 'create' && <CreateRoomComponent
+                cancelRoom={cancelRoom}
+                socket={socket}
+                gameOption={gameOption}
+                setGameOption={setGameOption}
+                onlineGames={onlineGames}
+                setOnlineGames={setOnlineGames}
+                setRoom={setRoom}
+                room={room}
+            />}
 
-            {gameOption.option == 'join' && <JoinRoomComponent cancelRoom={cancelRoom} socket={socket} gameOption={gameOption} setGameOption={setGameOption} onlineGames={onlineGames} setOnlineGames={setOnlineGames} />}
+            {gameOption.option == 'join' && <JoinRoomComponent
+                cancelRoom={cancelRoom}
+                socket={socket}
+                gameOption={gameOption}
+                setGameOption={setGameOption}
+                onlineGames={onlineGames}
+                setOnlineGames={setOnlineGames}
+                setRoom={setRoom}
+                room={room}
+            />}
 
-            {gameOption.option == 'random' && <RandomRoomComponent cancelRoom={cancelRoom} socket={socket} gameOption={gameOption} setGameOption={setGameOption} onlineGames={onlineGames} setOnlineGames={setOnlineGames} />}
+            {gameOption.option == 'random' && <RandomRoomComponent
+                cancelRoom={cancelRoom}
+                socket={socket}
+                gameOption={gameOption}
+                setGameOption={setGameOption}
+                onlineGames={onlineGames}
+                setOnlineGames={setOnlineGames}
+                setRoom={setRoom}
+                room={room}
+            />}
 
             {gameOption.option == '' &&
                 <>
