@@ -37,7 +37,7 @@ const removeGame = (gameId, socketId, userId) => {
         if (x.room._id.toString() == gameId.toString()) {
             if (x.room.members.includes(userId)) {
                 if (x.room.members.length > 1) {
-                    if (x.author == userId) {
+                    if (x.room.author == userId) {
                         let anotherPerson = x.room.members.find(x => x.toString() != userId)
 
                         x.room.author = anotherPerson.toString()
