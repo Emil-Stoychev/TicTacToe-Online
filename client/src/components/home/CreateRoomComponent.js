@@ -54,10 +54,20 @@ export const CreateRoomComponent = ({ cancelRoom, socket, gameOption, setGameOpt
             let existGame = onlineGames?.find(x => x?.room?._id == newGame?.room?._id)
 
             if (!existGame) {
-                setRoom(newGame.room)
+                onlineGames.find(x => {
+                    if (x.room._id == newGame.room._id) {
+                        setRoom(newGame.room)
+                    }
+                })
+                // setRoom(newGame.room)
                 setOnlineGames(state => [...state, newGame])
             } else {
-                setRoom(newGame.room)
+                onlineGames.find(x => {
+                    if (x.room._id == newGame.room._id) {
+                        setRoom(newGame.room)
+                    }
+                })
+
                 setOnlineGames(state => state.map(x => {
                     if (x.room._id == newGame.room._id) {
                         return newGame

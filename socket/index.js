@@ -81,7 +81,7 @@ io.on('connection', (socket) => {
         game = getGame(room._id)
 
         io.emit('get-game', game)
-        socket.broadcast.emit('get-allGames', activeGames)
+        socket.emit('get-allGames', activeGames)
 
         console.log('game created', socket.id);
     })
@@ -132,6 +132,8 @@ io.on('connection', (socket) => {
         if (game != null || game != undefined) {
             activeUsers.forEach((x) => {
                 if (game.room.members.includes(x.user._id)) {
+                    console.log('HERE TEST');
+                    console.log(game.room);
                     io.to(x.socketId).emit('get-game', game)
                 }
             })

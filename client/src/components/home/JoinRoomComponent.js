@@ -76,7 +76,6 @@ export const JoinRoomComponent = ({ cancelRoom, socket, gameOption, setGameOptio
     }, [gameOption])
 
     socket.current?.on('get-game', (data) => {
-        console.log('AFTER JOIN DATA');
         setJoinGame(data)
     })
 
@@ -84,15 +83,26 @@ export const JoinRoomComponent = ({ cancelRoom, socket, gameOption, setGameOptio
         if (joinGame != null) {
             let existGame = onlineGames.find(x => x?.room?._id == joinGame?.room?._id)
 
-            if (!existGame) {
-                setOnlineGames(state => state.map(x => {
-                    if (x.room._id == joinGame.room._id) {
-                        if (!x.room.members.includes(user._id)) {
-                            x.room.members.push(user._id)
+            if (existGame) {
+                if (existGame?.room?._id == joinGame.room._id) {
+                    setRoom(joinGame.room)
+
+                    if (joinGame?.room?.author?.toString() == user._id) {
+                        if (gameOption.option != 'create') {
+                            setGameOption(state => ({
+                                ...state,
+                                option: 'create'
+                            }))
                         }
                     }
+                }
 
-                    return x
+                setOnlineGames(state => state.map(x => {
+                    if (x.room._id == joinGame.room._id) {
+                        return joinGame
+                    } else {
+                        return x
+                    }
                 }))
             }
         }
