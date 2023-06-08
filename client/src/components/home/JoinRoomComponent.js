@@ -19,7 +19,7 @@ export const JoinRoomComponent = ({ cancelRoom, socket, gameOption, setGameOptio
                 .then(res => {
                     if (!res.message) {
                         setRoom(res.newRoom)
-                        setGameOption({ option: res.userGameOption, _id: res.newRoom._id })
+                        setGameOption({ option: res.userGameOption, gameId: res.newRoom._id })
                     } else {
                         console.log(res);
                     }
@@ -55,7 +55,7 @@ export const JoinRoomComponent = ({ cancelRoom, socket, gameOption, setGameOptio
                     console.log(res);
                     if (!res.message) {
                         setRoom(res.newRoom)
-                        setGameOption({ option: res.userGameOption, _id: res.newRoom._id })
+                        setGameOption({ option: res.userGameOption, gameId: res.newRoom._id })
                     } else {
                         console.log(res);
                     }

@@ -126,8 +126,13 @@ export const HomeComponent = ({ socket, setOnlineUsers, onlineUsers, onlineGames
     const leave = (e) => {
         e.preventDefault()
 
+        if (gameOption.gameId != '' && gameOption.gameId != undefined && gameOption.gameId != null) {
+            return console.log({ message: 'First u must leave room!' });
+        }
+
         gameService.leaveUser(user)
             .then(res => {
+                // socket.current?.emit('remove-game', { gameId: res.gameId, userId: res.userId })
                 setOnlineUsers(state => state.filter(x => x.user._id != user._id))
                 setGameOption({ option: '', gameId: '' })
                 setRoom({

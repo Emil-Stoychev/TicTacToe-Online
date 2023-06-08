@@ -36,6 +36,11 @@ const leaveUser = async (user) => {
     try {
         let currUser = await User.findById(user?._id)
 
+        let ids = {
+            userId: currUser?._id,
+            gameId: currUser?.gameId,
+        }
+
         let game = await Game.findById(currUser?.gameId)
 
         if (game) {
@@ -51,7 +56,7 @@ const leaveUser = async (user) => {
 
         await User.findByIdAndDelete(currUser?._id)
 
-        return []
+        return ids
     } catch (error) {
         return error
     }

@@ -53,7 +53,12 @@ const enterRoom = async (data, userId) => {
             }
 
             if (gameRoom.members.includes(user._id)) {
-                return { newRoom: gameRoom, userGameOption: user.gameOption }
+                // if (gameRoom.author == user._id) {
+                //     user.gameOption = 'create'
+                //     await user.save()
+                // }
+
+                return { newRoom: gameRoom, userGameOption: user?.gameOption }
             }
 
             if (gameRoom.members.length >= 2) {

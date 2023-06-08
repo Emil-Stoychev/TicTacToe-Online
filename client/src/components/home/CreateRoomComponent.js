@@ -19,7 +19,7 @@ export const CreateRoomComponent = ({ cancelRoom, socket, gameOption, setGameOpt
             .then(res => {
                 if (!res.message) {
                     setRoom(res.newRoom)
-                    setGameOption({ option: res.userGameOption, _id: res.newRoom._id })
+                    setGameOption({ option: res.userGameOption, gameId: res.newRoom._id })
                 } else {
                     console.log(res);
                 }
@@ -46,6 +46,8 @@ export const CreateRoomComponent = ({ cancelRoom, socket, gameOption, setGameOpt
 
     useEffect(() => {
         if (newGame != null) {
+            console.log('HERE');
+            console.log(newGame);
             let existGame = onlineGames?.find(x => x?.room?._id == newGame?.room?._id)
 
             if (!existGame) {
