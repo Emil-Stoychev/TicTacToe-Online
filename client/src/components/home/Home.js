@@ -59,6 +59,8 @@ export const HomeComponent = ({ socket, setOnlineUsers, onlineUsers, onlineGames
                             token: localStorage.getItem('sessionStorage')
                         })
 
+                        console.log(res);
+
                         setGameOption({ option: res?.gameOption || '', gameId: res?.gameId || '' })
                     } else {
                         localStorage.removeItem('sessionStorage')
@@ -264,7 +266,7 @@ export const HomeComponent = ({ socket, setOnlineUsers, onlineUsers, onlineGames
                 {user.token == null
                     ? <button onClick={(e) => login(e)}>Play</button>
                     :
-                    user.gameId == '' &&
+                    gameOption.option == '' &&
                     <div className="createAndJoinRoomBtns">
                         <button onClick={(e) => enterRoom(e, 'create')}>Create room</button>
                         <button onClick={(e) => enterRoom(e, 'join')}>Join room</button>

@@ -34,7 +34,7 @@ const joinNewUserToGame = (room, userId) => {
 
 const removeGame = (gameId, socketId, userId) => {
     activeGames = activeGames.filter(x => {
-        if (x.room._id.toString() == gameId.toString()) {
+        if (x.room._id?.toString() == gameId?.toString()) {
             if (x.room.members.includes(userId)) {
                 if (x.room.members.length > 1) {
                     if (x.room.author == userId) {
@@ -49,6 +49,33 @@ const removeGame = (gameId, socketId, userId) => {
             }
         } else {
             return x
+        }
+    })
+}
+
+const getRandomGame = (room, userId) => {
+    activeGames = activeGames.map(x => {
+        if (x.room._id == room?._id) {
+            x.room = room
+        }
+
+        return x
+    })
+
+    return activeGames.find((game) => {
+        if (game.room._id == room?._id) {
+            return room
+        }
+        if (game.room.author == userId) {
+            return game
+        } else if (game.room.visible == 'Public' && game.room.members.length == 1) {
+            if (game.room.members.includes(userId)) {
+                return game
+            } else {
+                game.room.members.push(userId)
+
+                return game
+            }
         }
     })
 }
@@ -123,6 +150,65 @@ io.on('connection', (socket) => {
         }
     })
 
+    socket.on("random-game", ({ room, userId }) => {
+        let game = getRandomGame(room, userId)
+
+        if (game) {
+            io.emit('get-game', game)
+
+            console.log('return random game', socket.id);
+
+            return
+        }
+
+        addNewGame(room, socket.id)
+        game = getGame(room._id)
+
+        game.room.members.forEach(x => {
+
+        })
+        io.emit('get-game', game)
+        // socket.emit('get-allGames', activeGames)
+        activeUsers.forEach((x) => {
+            io.to(x.socketId).emit('get-allGames', activeGames)
+        })
+
+        console.log('random game created', socket.id);
+
+        // if (game) {
+        //     if (game.room.members.includes(userId)) {
+
+        //         activeUsers.forEach(x => {
+        //             if (game.room.members.includes(x.user._id)) {
+        //                 io.to(x.socketId).emit('get-game', game)
+        //             }
+        //         })
+
+        //         console.log('u already exist in this room', socket.id);
+
+        //         return
+        //     }
+
+        //     if (game.room.members.length < 2) {
+        //         joinNewUserToGame(room, userId)
+
+        //         console.log(game);
+
+        //         activeUsers.forEach(x => {
+        //             if (game.room.members.includes(x.user._id)) {
+        //                 io.to(x.socketId).emit('get-game', game)
+        //             }
+        //         })
+
+        //         console.log('join successfully', socket.id);
+
+        //         return
+        //     }
+
+        //     return { message: 'Game does not exist!' }
+        // }
+    })
+
     socket.on("remove-game", ({ gameId, userId }) => {
         removeGame(gameId, socket.id, userId)
         let game = getGame(gameId)
@@ -132,8 +218,6 @@ io.on('connection', (socket) => {
         if (game != null || game != undefined) {
             activeUsers.forEach((x) => {
                 if (game.room.members.includes(x.user._id)) {
-                    console.log('HERE TEST');
-                    console.log(game.room);
                     io.to(x.socketId).emit('get-game', game)
                 }
             })
@@ -146,7 +230,6 @@ io.on('connection', (socket) => {
 
             console.log(`Game with id: ${gameId} was removed!`);
         }
-
     })
 
     socket.on("sendNotification", ({ senderId, receiverId }) => {
@@ -185,7 +268,7 @@ io.on('connection', (socket) => {
                     x.room.members = x.room.members.filter(x => x.toString() != currUser.user._id.toString())
 
                     let anotherPlayer = activeUsers.find(y => y.user._id == x.room.members[0].toString())
-                    io.to(anotherPlayer.socketId).emit('get-game', x)
+                    io.to(anotherPlayer?.socketId).emit('get-game', x)
 
                     return x
                 }

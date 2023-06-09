@@ -53,11 +53,6 @@ const enterRoom = async (data, userId) => {
             }
 
             if (gameRoom.members.includes(user._id)) {
-                // if (gameRoom.author == user._id) {
-                //     user.gameOption = 'create'
-                //     await user.save()
-                // }
-
                 return { newRoom: gameRoom, userGameOption: user?.gameOption }
             }
 
@@ -75,10 +70,13 @@ const enterRoom = async (data, userId) => {
             return { newRoom: gameRoom, userGameOption: user.gameOption }
         } else if (data?.option == 'random') {
             if (user.gameId != undefined && user.gameId != '') {
-                return await Game.findById(user.gameId)
+                let game = await Game.findById(user.gameId)
+
+                return { newRoom: game, userGameOption: user?.gameOption }
             }
 
             let gameRoom = await Game.findOne({ visible: 'Public', members: { $size: 1 } })
+
 
             if (gameRoom) {
                 user.gameId = gameRoom?._id
@@ -88,7 +86,7 @@ const enterRoom = async (data, userId) => {
                 gameRoom.members.push(user?._id)
                 await gameRoom.save()
 
-                return gameRoom
+                return { newRoom: gameRoom, userGameOption: user?.gameOption }
             }
 
             let newRoom = await Game.create({
@@ -104,7 +102,7 @@ const enterRoom = async (data, userId) => {
             user.gameOption = 'random'
             user.save()
 
-            return newRoom
+            return { newRoom: gameRoom, userGameOption: user?.gameOption }
         }
     } catch (error) {
         console.error(error)
@@ -126,9 +124,12 @@ const leaveRoom = async (userId) => {
             if (game.members.length == 2) {
                 if (game.author.toString() == user._id.toString()) {
                     let anotherUser = game.members.find(x => x.toString() != game?.author.toString())
+                    let anotherUserFromDB = await User.findById(anotherUser)
 
                     await Game.findByIdAndUpdate(user?.gameId, { $pull: { members: user?._id }, author: anotherUser })
-                    await User.findByIdAndUpdate(anotherUser, { gameOption: 'create' })
+                    if (anotherUserFromDB.gameOption != 'random') {
+                        await User.findByIdAndUpdate(anotherUser, { gameOption: 'create' })
+                    }
                 } else {
                     await Game.findByIdAndUpdate(user?.gameId, { $pull: { members: user?._id } })
                 }
