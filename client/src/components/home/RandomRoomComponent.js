@@ -70,28 +70,46 @@ export const RandomRoomComponent = ({ cancelRoom, socket, gameOption, setGameOpt
         if (randomGame != null) {
             let existGame = onlineGames.find(x => x?.room?._id == randomGame?.room?._id)
 
-            if (!existGame) {
-                onlineGames.find(x => {
-                    if (x.room._id == randomGame.room._id) {
-                        setRoom(randomGame.room)
-                    }
-                })
-                // setRoom(randomGame.room)
-                setOnlineGames(state => [...state, randomGame])
-            } else {
-                onlineGames.find(x => {
-                    if (x.room._id == randomGame.room._id) {
-                        setRoom(randomGame.room)
-                    }
-                })
+            // if (!existGame) {
+            //     onlineGames.find(x => {
+            //         if (x.room._id == randomGame.room._id) {
+            //             setRoom(randomGame.room)
+            //         }
+            //     })
+            //     // setRoom(randomGame.room)
+            //     setOnlineGames(state => [...state, randomGame])
+            // } else {
+            //     onlineGames.find(x => {
+            //         if (x.room._id == randomGame.room._id) {
+            //             setRoom(randomGame.room)
+            //         }
+            //     })
 
-                setOnlineGames(state => state.map(x => {
-                    if (x.room._id == randomGame.room._id) {
-                        return randomGame
-                    }
+            //     setOnlineGames(state => state.map(x => {
+            //         if (x.room._id == randomGame.room._id) {
+            //             return randomGame
+            //         }
 
-                    return x
-                }))
+            //         return x
+            //     }))
+            // }
+
+            if (randomGame.room.members.includes(user._id) || randomGame.room.author == user._id) {
+                if (existGame?.room?._id == randomGame.room._id) {
+                    onlineGames.find(x => {
+                        if (x.room._id == randomGame.room._id) {
+                            setRoom(randomGame.room)
+                        }
+                    })
+
+                    setOnlineGames(state => state.map(x => {
+                        if (x.room._id == randomGame.room._id) {
+                            return randomGame
+                        } else {
+                            return x
+                        }
+                    }))
+                }
             }
         }
     }, [randomGame])

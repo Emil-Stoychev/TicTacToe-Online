@@ -52,7 +52,6 @@ export const JoinRoomComponent = ({ cancelRoom, socket, gameOption, setGameOptio
         if (room.roomId != '' && room.roomId.length > 3) {
             gameService.enterRoom(localStorage.getItem('sessionStorage'), data)
                 .then(res => {
-                    console.log(res);
                     if (!res.message) {
                         setRoom(res.newRoom)
                         setGameOption({ option: res.userGameOption, gameId: res.newRoom._id })
