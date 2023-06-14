@@ -6,6 +6,7 @@ import { AuthContext } from '../../context/UserContext'
 
 export const RandomRoomComponent = ({ cancelRoom, socket, gameOption, setGameOption, onlineGames, setOnlineGames, setRoom, room }) => {
     const [randomGame, setRandomGame] = useState(null)
+    const [timer, setTimer] = useState(0)
 
     const navigate = useNavigate()
     const { user, setUser } = useContext(AuthContext)
@@ -54,9 +55,11 @@ export const RandomRoomComponent = ({ cancelRoom, socket, gameOption, setGameOpt
 
     useEffect(() => {
         if (room.members.length == 2) {
-            // setTimeout(() => {
-            //     navigate('/game/' + room.gameId)
-            // }, 3000);
+            setTimer(3)
+
+            setTimeout(() => {
+                navigate(`/game/${room._id}`)
+            }, 3000);
             console.log('NOW ROOM IS FULL');
         }
     }, [room.members])
@@ -69,30 +72,6 @@ export const RandomRoomComponent = ({ cancelRoom, socket, gameOption, setGameOpt
     useEffect(() => {
         if (randomGame != null) {
             let existGame = onlineGames.find(x => x?.room?._id == randomGame?.room?._id)
-
-            // if (!existGame) {
-            //     onlineGames.find(x => {
-            //         if (x.room._id == randomGame.room._id) {
-            //             setRoom(randomGame.room)
-            //         }
-            //     })
-            //     // setRoom(randomGame.room)
-            //     setOnlineGames(state => [...state, randomGame])
-            // } else {
-            //     onlineGames.find(x => {
-            //         if (x.room._id == randomGame.room._id) {
-            //             setRoom(randomGame.room)
-            //         }
-            //     })
-
-            //     setOnlineGames(state => state.map(x => {
-            //         if (x.room._id == randomGame.room._id) {
-            //             return randomGame
-            //         }
-
-            //         return x
-            //     }))
-            // }
 
             if (randomGame.room.members.includes(user._id) || randomGame.room.author == user._id) {
                 if (existGame?.room?._id == randomGame.room._id) {
@@ -121,6 +100,7 @@ export const RandomRoomComponent = ({ cancelRoom, socket, gameOption, setGameOpt
             <form className="randomRoomForm">
                 <div className="createAndJoinRoomBtns">
                     <h2>{room.members.map(x => `${x}, `)}</h2>
+                    {timer > 0 && <h2>Game will start after {timer} seconds...</h2>}
                     <button onClick={(e) => cancelRoom(e)}>Cancel</button>
                     {/* <button onClick={(e) => randomRoomHandler(e)}>Join</button> */}
                 </div>

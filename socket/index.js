@@ -252,10 +252,21 @@ io.on('connection', (socket) => {
     socket.on('update-board', (data) => {
         if (data != null) {
             const { receiverId } = data
-            const user = activeUsers.find(x => x._id == receiverId)
+            const user = activeUsers.find(x => x.user._id == receiverId)
 
             if (user) {
-                io.to(user.socketId).emit('updated-board', data.res)
+                io.to(user.socketId).emit('game-update', data)
+            }
+        }
+    })
+
+    socket.on('leave-game', (data) => {
+        if (data != null) {
+            const { receiverId } = data
+            const user = activeUsers.find(x => x.user._id == receiverId)
+            
+            if (user) {
+                io.to(user.socketId).emit('game-update-afterUserLeaved', data)
             }
         }
     })

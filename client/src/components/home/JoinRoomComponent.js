@@ -29,7 +29,7 @@ export const JoinRoomComponent = ({ cancelRoom, socket, gameOption, setGameOptio
 
     useEffect(() => {
         if (room.members.length == 2) {
-            // navigate('/game/' + room._id)
+            navigate(`/game/${room._id}`)
             console.log('NOW ROOM IS FULL');
         }
     }, [room.members])

@@ -29,7 +29,7 @@ export const CreateRoomComponent = ({ cancelRoom, socket, gameOption, setGameOpt
     useEffect(() => {
         if (room.members.length == 2) {
             console.log('NOW ROOM IS FULL');
-            // navigate('/game/' + room?._id)
+            navigate(`/game/${room._id}`)
         }
     }, [room.members])
 

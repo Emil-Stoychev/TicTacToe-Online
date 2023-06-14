@@ -3,7 +3,7 @@ import './style.css'
 
 import * as gameService from '../../services/gameService'
 import { AuthContext } from '../../context/UserContext'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 const GameComponent = ({ socket }) => {
     const [currPlayer, setCurrentPlayer] = useState({
@@ -37,8 +37,8 @@ const GameComponent = ({ socket }) => {
                         })
 
                         setCurrentPlayer({
-                            name: res?.members[0].username,
-                            spanEl: 'X'
+                            name: res?.members[res?.playerTurn].username,
+                            spanEl: res?.playerTurn == 0 ? 'X' : 'O'
                         })
                     } else {
                         navigate('/')
@@ -59,9 +59,16 @@ const GameComponent = ({ socket }) => {
                         [state.gameOption]: '',
                         [state.gameId]: undefined
                     }))
+
+                    socket.current?.emit('leave-game', {
+                        gameId: currGame._id,
+                        receiverId: members?.firstP?._id != user._id ? members.firstP._id : members.secondP._id,
+                    })
                 } else {
                     console.log(res);
                 }
+
+                navigate('/')
             })
     }
 
@@ -69,7 +76,7 @@ const GameComponent = ({ socket }) => {
     const wonGameText = useRef(null)
     let roundWin
 
-    let currentPlayer = 'X';
+    let currentPlayer = currPlayer.spanEl;
     let isFilled
 
     /*
@@ -91,12 +98,11 @@ const GameComponent = ({ socket }) => {
     ];
 
     console.log(currPlayer);
+    let e
+    let s
+    let r
 
     function resultValidate(currentPlayer) {
-        let e
-        let s
-        let r
-
         roundWin = false
         // wonGameText.setAttribute('class', 'display hide')
         for (let i = 0; i <= 7; i++) {
@@ -119,23 +125,35 @@ const GameComponent = ({ socket }) => {
         }
 
         if (roundWin) {
-            let first = Array.from(board).find((x, i) => i == e)
-            let second = Array.from(board).find((x, i) => i == s)
-            let third = Array.from(board).find((x, i) => i == r)
+            // let first = Array.from(board).find((x, i) => i == e)
+            // let second = Array.from(board).find((x, i) => i == s)
+            // let third = Array.from(board).find((x, i) => i == r)
             winGame(currPlayer.name)
             // roundWinActions(first, second, third)
         }
     }
 
-    // socket.current?.on('receive-message', (data) => {
-    //     setReceivedMessage(data)
-    // })
+    socket.current?.on('game-update', (data) => {
+        if (data != null && data != undefined) {
+            setCurrentPlayer({ name: data?.currPlayer, spanEl: data?.currSpanEl })
+            setBoard(data?.board)
+            setCurrGame(state => ({
+                ...state,
+                playerX: data?.playerX,
+                playerO: data?.playerO,
+            }))
+        }
+    })
+
+    socket.current?.on('game-update-afterUserLeaved', (data) => {
+        console.log('LEAVE ROOM AUTO AFTER THIS MESSAGE');
+        console.log(data);
+        if (data != null && data != undefined) {
+            navigate('/')
+        }
+    })
 
     async function setInBoardIndex(tile, index) {
-
-        console.log(tile);
-        console.log(index);
-
         if (tile === 'X' || tile === 'O' || tile === ' ') {
             return
         }
@@ -148,15 +166,24 @@ const GameComponent = ({ socket }) => {
             .then(res => {
                 setCurrGame(res)
                 setBoard(res.board)
+
+                socket.current?.emit('update-board', {
+                    gameId: currGame._id,
+                    currPlayer: members?.firstP?.username != currPlayer.name ? members.firstP.username : members.secondP.username,
+                    currSpanEl: res?.playerTurn == 0 ? 'X' : 'O',
+                    board: res.board,
+                    receiverId: members?.firstP?.username != currPlayer.name ? members.firstP._id : members.secondP._id,
+                    playerX: res.playerX,
+                    playerO: res.playerO,
+                })
             })
 
-        setCurrentPlayer(state => ({
-            ...state,
-            spanEl: currPlayer == 'X' ? 'O' : 'X'
-        }))
+        setCurrentPlayer({
+            name: members?.firstP?.username != currPlayer.name ? members.firstP.username : members.secondP.username,
+            spanEl: currPlayer.spanEl == 'X' ? 'O' : 'X'
+        })
 
         resultValidate(currentPlayer)
-
 
         // curPlayerSpanEl.setAttribute('class', `player${currentPlayer}`)
         isFilled = Array.from(board).some(x => x == '')
@@ -205,9 +232,7 @@ const GameComponent = ({ socket }) => {
                 <h1>Tic Tac Toe</h1>
                 <span>{currGame?.playerX || 0}:{currGame?.playerO || 0}</span>
             </section>
-            <section className="display">
-                Player <span className="playerX">{currPlayer.spanEl}</span>'s turn
-            </section>
+            <section className="display">Player <span className="playerX">{currPlayer.name}</span>'s turn</section >
             <section className="container" ref={tilesContainer}>
                 {board.map((x, i) => <div key={i} onClick={() => setInBoardIndex(x, i)} className="tile">{x}</div>)}
             </section>

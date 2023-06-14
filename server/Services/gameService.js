@@ -122,11 +122,13 @@ const leaveRoom = async (userId) => {
 
         if (game) {
             if (game.members.length == 2) {
+                await Game.findByIdAndUpdate(user?.gameId, { playerO: 0, playerX: 0, board: ['', '', '', '', '', '', '', '', ''] })
+
                 if (game.author.toString() == user._id.toString()) {
                     let anotherUser = game.members.find(x => x.toString() != game?.author.toString())
                     let anotherUserFromDB = await User.findById(anotherUser)
 
-                    await Game.findByIdAndUpdate(user?.gameId, { $pull: { members: user?._id }, author: anotherUser })
+                    await Game.findByIdAndUpdate(user?.gameId, { $pull: { members: user?._id }, author: anotherUser, playerO: 0, playerX: 0, board: ['', '', '', '', '', '', '', '', ''] })
                     if (anotherUserFromDB.gameOption != 'random') {
                         await User.findByIdAndUpdate(anotherUser, { gameOption: 'create' })
                     }
@@ -186,6 +188,10 @@ const setInBoard = async (data) => {
             return x
         })
 
+        game.playerTurn = game.playerTurn == 0 ? 1 : 0
+
+        await game.save()
+
         let gameEnd = await resultValidate(gameId)
 
         if (gameEnd) {
@@ -196,9 +202,9 @@ const setInBoard = async (data) => {
             } else {
                 game.playerO++
             }
-        }
 
-        await game.save()
+            await game.save()
+        }
 
         return await Game.findById(gameId).populate('members')
     } catch (error) {
@@ -250,34 +256,6 @@ async function resultValidate(gameId) {
         return true
     } else {
         return false
-    }
-}
-
-const game = async () => {
-    try {
-
-        /*
-            Board indexes
-            [0] [1] [2]
-            [3] [4] [5]
-            [6] [7] [8]
-        */
-
-        const winningConditions = [
-            [0, 1, 2],
-            [3, 4, 5],
-            [6, 7, 8],
-            [0, 3, 6],
-            [1, 4, 7],
-            [2, 5, 8],
-            [0, 4, 8],
-            [2, 4, 6]
-        ];
-
-
-    } catch (error) {
-        return error
-        console.log(error);
     }
 }
 
