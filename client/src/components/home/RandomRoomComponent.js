@@ -3,13 +3,14 @@ import { useNavigate } from 'react-router-dom'
 
 import * as gameService from '../../services/gameService'
 import { AuthContext } from '../../context/UserContext'
+import useGlobalErrorsHook from '../../hooks/useGlobalError'
 
 export const RandomRoomComponent = ({ cancelRoom, socket, gameOption, setGameOption, onlineGames, setOnlineGames, setRoom, room }) => {
     const [randomGame, setRandomGame] = useState(null)
-    const [timer, setTimer] = useState(0)
 
     const navigate = useNavigate()
     const { user, setUser } = useContext(AuthContext)
+    let [errors, setErrors] = useGlobalErrorsHook()
 
     useEffect(() => {
         if (user.gameId != '') {
@@ -55,8 +56,7 @@ export const RandomRoomComponent = ({ cancelRoom, socket, gameOption, setGameOpt
 
     useEffect(() => {
         if (room.members.length == 2) {
-            setTimer(3)
-
+            setErrors({ message: 'Game is loading...', type: 'loading' })
             setTimeout(() => {
                 navigate(`/game/${room._id}`)
             }, 3000);
@@ -100,7 +100,7 @@ export const RandomRoomComponent = ({ cancelRoom, socket, gameOption, setGameOpt
             <form className="randomRoomForm">
                 <div className="createAndJoinRoomBtns">
                     <h2>{room.members.map(x => `${x}, `)}</h2>
-                    {timer > 0 && <h2>Game will start after {timer} seconds...</h2>}
+                    {room?.members?.length == 2 && <h2>Please wait, game is loading...</h2>}
                     <button onClick={(e) => cancelRoom(e)}>Cancel</button>
                     {/* <button onClick={(e) => randomRoomHandler(e)}>Join</button> */}
                 </div>

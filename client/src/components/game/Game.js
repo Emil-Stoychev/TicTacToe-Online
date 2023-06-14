@@ -5,6 +5,8 @@ import * as gameService from '../../services/gameService'
 import { AuthContext } from '../../context/UserContext'
 import { useNavigate } from 'react-router-dom'
 
+import useGlobalErrorsHook from '../../hooks/useGlobalError'
+
 const GameComponent = ({ socket }) => {
     const [currPlayer, setCurrentPlayer] = useState({
         name: '',
@@ -15,11 +17,11 @@ const GameComponent = ({ socket }) => {
         secondP: {}
     })
     const { user, setUser } = useContext(AuthContext)
+    let [errors, setErrors] = useGlobalErrorsHook()
 
     const [currGame, setCurrGame] = useState({})
     const [board, setBoard] = useState(['', '', '', '', '', '', '', '', ''])
     const navigate = useNavigate()
-
 
     useEffect(() => {
         let gameId = window.location.pathname.split('/game/')[1]
@@ -52,7 +54,6 @@ const GameComponent = ({ socket }) => {
     const leaveRoom = (e) => {
         gameService.leaveRoom(localStorage.getItem('sessionStorage'))
             .then(res => {
-                console.log(res);
                 if (!res.message) {
                     setUser(state => ({
                         ...state,
@@ -73,7 +74,6 @@ const GameComponent = ({ socket }) => {
     }
 
     const tilesContainer = useRef(null)
-    const wonGameText = useRef(null)
     let roundWin
 
     let currentPlayer = currPlayer.spanEl;
@@ -97,14 +97,12 @@ const GameComponent = ({ socket }) => {
         [2, 4, 6]
     ];
 
-    console.log(currPlayer);
     let e
     let s
     let r
 
     function resultValidate(currentPlayer) {
         roundWin = false
-        // wonGameText.setAttribute('class', 'display hide')
         for (let i = 0; i <= 7; i++) {
             let winCondition = winningConditions[i]
             let a = board[winCondition[0]]
@@ -146,8 +144,6 @@ const GameComponent = ({ socket }) => {
     })
 
     socket.current?.on('game-update-afterUserLeaved', (data) => {
-        console.log('LEAVE ROOM AUTO AFTER THIS MESSAGE');
-        console.log(data);
         if (data != null && data != undefined) {
             navigate('/')
         }
@@ -185,21 +181,17 @@ const GameComponent = ({ socket }) => {
 
         resultValidate(currentPlayer)
 
-        // curPlayerSpanEl.setAttribute('class', `player${currentPlayer}`)
         isFilled = Array.from(board).some(x => x == '')
 
         if (!isFilled) {
             if (!roundWin) {
-                wonGameText.current = `Try again!`
-                // wonGameText.setAttribute('class', 'display')
+                setErrors({ message: `Try again!`, type: '' })
             }
         }
     }
 
-
     function winGame() {
-        wonGameText.current = `Player ${currPlayer.name} win the Game!`
-        // wonGameText.setAttribute('class', 'display')
+        setErrors({ message: `Player ${currPlayer.name} win the Game!`, type: '' })
         setBoard(['', '', '', '', '', '', '', '', ''])
     }
     let timer
@@ -224,19 +216,16 @@ const GameComponent = ({ socket }) => {
     //     }, 400);
     // }
 
-    console.log(board);
-
     return (
         <>
             <section className="title">
                 <h1>Tic Tac Toe</h1>
-                <span>{currGame?.playerX || 0}:{currGame?.playerO || 0}</span>
+                <span>X - {currGame?.playerX || 0}:{currGame?.playerO || 0} - O</span>
             </section>
-            <section className="display">Player <span className="playerX">{currPlayer.name}</span>'s turn</section >
+            <section className="display">Player <span className="playerX">{`${currPlayer.name}`}</span>'s turn <span className="playerX">{`${currPlayer.spanEl}`}</span></section >
             <section className="container" ref={tilesContainer}>
                 {board.map((x, i) => <div key={i} onClick={() => setInBoardIndex(x, i)} className="tile">{x}</div>)}
             </section>
-            <section id="wonGameText" ref={wonGameText} className="display hide"></section>
 
             <button onClick={(e) => leaveRoom(e)}>Leave</button>
         </>

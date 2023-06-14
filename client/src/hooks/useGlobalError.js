@@ -19,32 +19,28 @@ const useGlobalErrorsHook = () => {
                 setErrors({ message: '', type: '' })
             }, 3000);
 
-            navigate('/login')
+            navigate('/')
         } else {
             if (errors?.type == 'loading') {
                 if (errors?.message != '') {
-                    new Snackbar(errors.message, { iconSrc: './loading-gif.gif', timeout: 1500 })
+                    new Snackbar(errors.message, { iconSrc: './loading-gif.gif', timeout: 2000 })
                 }
-            } else if (errors?.type == 'remove image') {
-                new Snackbar(`Image has been removed!`, {
-                    position: 'bottom-center',
-                    timeout: 1500,
-                    style: {
-                        container: [
-                            ['background-color', 'red'],
-                            ['border-radius', '5px']
-                        ]
-                    }
-                })
-
             } else if (errors?.type == 'logged') {
                 new Snackbar(`Welcome, `, {
                     position: 'bottom-center',
                     theme: 'dark',
                     position: 'top-center',
                     actionText: `${errors.message}! 😇`,
+                    timeout: 1500
                 })
-
+            } else if (errors?.type == 'out') {
+                new Snackbar('See you soon!', {
+                    position: 'bottom-center',
+                    theme: 'dark',
+                    position: 'top-center',
+                    actionText: `😇`,
+                    timeout: 1500
+                })
             } else {
                 if (errors?.message != '') {
                     new Snackbar(errors.message)

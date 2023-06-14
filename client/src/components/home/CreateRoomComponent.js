@@ -3,11 +3,13 @@ import { useNavigate } from 'react-router-dom'
 
 import * as gameService from '../../services/gameService'
 import { AuthContext } from "../../context/UserContext"
+import useGlobalErrorsHook from '../../hooks/useGlobalError'
 
 export const CreateRoomComponent = ({ cancelRoom, socket, gameOption, setGameOption, onlineGames, setOnlineGames, setRoom, room }) => {
     const [newGame, setNewGame] = useState(null)
     const navigate = useNavigate()
     const { user, setUser } = useContext(AuthContext)
+    let [errors, setErrors] = useGlobalErrorsHook()
 
     useEffect(() => {
 
@@ -28,8 +30,10 @@ export const CreateRoomComponent = ({ cancelRoom, socket, gameOption, setGameOpt
 
     useEffect(() => {
         if (room.members.length == 2) {
-            console.log('NOW ROOM IS FULL');
-            navigate(`/game/${room._id}`)
+            setErrors({ message: 'Game is loading...', type: 'loading' })
+            setTimeout(() => {
+                navigate(`/game/${room._id}`)
+            }, 3000);
         }
     }, [room.members])
 

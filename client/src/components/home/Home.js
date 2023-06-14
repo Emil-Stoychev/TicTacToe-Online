@@ -10,10 +10,12 @@ import { RandomRoomComponent } from './RandomRoomComponent'
 
 import { io } from 'socket.io-client'
 import { AuthContext } from '../../context/UserContext'
+import useGlobalErrorsHook from '../../hooks/useGlobalError'
 
 
 export const HomeComponent = ({ socket, setOnlineUsers, onlineUsers, onlineGames, setOnlineGames }) => {
     let { user, setUser } = useContext(AuthContext)
+    let [errors, setErrors] = useGlobalErrorsHook()
     const [messages, setMessages] = useState([])
     const [receivedMessage, setReceivedMessage] = useState(null)
     const [newMessage, setNewMessage] = useState(null)
@@ -59,10 +61,10 @@ export const HomeComponent = ({ socket, setOnlineUsers, onlineUsers, onlineGames
                             token: localStorage.getItem('sessionStorage')
                         })
 
-                        console.log(res);
-
+                        setErrors({ message: res?.username, type: 'logged' })
                         setGameOption({ option: res?.gameOption || '', gameId: res?.gameId || '' })
                     } else {
+                        setErrors({ message: 'Please log in again!', type: 'Unauthorized!' })
                         localStorage.removeItem('sessionStorage')
                         setUser({
                             username: '',
@@ -72,7 +74,6 @@ export const HomeComponent = ({ socket, setOnlineUsers, onlineUsers, onlineGames
                             token: null
                         })
                         setGameOption({ option: '', gameId: '' })
-                        console.log(res);
                     }
                 })
         }
@@ -105,10 +106,12 @@ export const HomeComponent = ({ socket, setOnlineUsers, onlineUsers, onlineGames
                         })
 
                         localStorage.setItem('sessionStorage', res?.token)
+                        setErrors({ message: res?.username, type: 'logged' })
 
                         setGameOption({ option: '', gameId: '' })
                     } else {
                         setGameOption({ option: '', gameId: '' })
+                        setErrors({ message: 'Please log in again!', type: 'Unauthorized!' })
                         localStorage.removeItem('sessionStorage')
                         setUser({
                             username: '',
@@ -150,6 +153,8 @@ export const HomeComponent = ({ socket, setOnlineUsers, onlineUsers, onlineGames
                     gameId: '',
                     token: null
                 })
+
+                setErrors({ message: 'See you soon!', type: 'out' })
             })
     }
 
