@@ -206,6 +206,16 @@ const setInBoard = async (data) => {
             await game.save()
         }
 
+        isFilled = game.board.some(x => x == '')
+
+        if (!isFilled) {
+            if (!gameEnd) {
+                game.board = ['', '', '', '', '', '', '', '', '']
+
+                await game.save()
+            }
+        }
+
         return await Game.findById(gameId).populate('members')
     } catch (error) {
         console.log(error);
