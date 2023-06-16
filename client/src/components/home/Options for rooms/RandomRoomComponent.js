@@ -1,9 +1,9 @@
 import { useState, useEffect, useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import * as gameService from '../../services/gameService'
-import { AuthContext } from '../../context/UserContext'
-import useGlobalErrorsHook from '../../hooks/useGlobalError'
+import * as gameService from '../../../services/gameService'
+import { AuthContext } from '../../../context/UserContext'
+import useGlobalErrorsHook from '../../../hooks/useGlobalError'
 
 export const RandomRoomComponent = ({ cancelRoom, socket, gameOption, setGameOption, onlineGames, setOnlineGames, setRoom, room }) => {
     const [randomGame, setRandomGame] = useState(null)

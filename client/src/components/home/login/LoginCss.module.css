@@ -1,0 +1,72 @@
+.mainSection {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.loginForm {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+/* INPUT FIELD */
+
+.usernameInput {
+  font-family: "cursive";
+  color: white;
+  text-shadow: 1px 1px 10px aqua;
+  display: block;
+  background-color: black;
+  width: 250px;
+  border-radius: 30px;
+  padding: 10px;
+  margin: 0 auto 20px auto;
+  text-align: center;
+  font-size: 24px;
+  transition-duration: 0.5s;
+  font-weight: 300;
+}
+
+.usernameInput:hover {
+  background-color: black;
+}
+
+.usernameInput:focus {
+  background-color: whitesmoke;
+  width: 300px;
+  color: black;
+}
+
+.labelForUsername {
+  text-align: center;
+  margin: 0 auto;
+  color: antiquewhite;
+  letter-spacing: 8px;
+  font-size: 20px;
+}
+
+/* BTNS */
+.SettAndAboutDivBtns button,
+.primaryBtn {
+  text-align: center;
+  font-size: 24px;
+  border-radius: 100px;
+  padding-right: 35px;
+  padding-left: 35px;
+  color: white;
+  background: #7a7064;
+  cursor: pointer;
+  text-shadow: 1px 1px 10px black;
+  transition-duration: 0.25s;
+  margin-bottom: 1rem;
+  margin-right: 1rem;
+}
+
+.SettAndAboutDivBtns button:hover,
+.primaryBtn:hover {
+  background: rgba(150, 255, 220, 0.795);
+  transform: scale(1.1);
+}
