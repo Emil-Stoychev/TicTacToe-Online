@@ -1,5 +1,5 @@
 import { useContext, useEffect, useRef, useState } from 'react'
-import './style.css'
+import styles from './Game.module.css'
 
 import * as gameService from '../../services/gameService'
 import { AuthContext } from '../../context/UserContext'
@@ -217,18 +217,20 @@ const GameComponent = ({ socket }) => {
     // }
 
     return (
-        <>
-            <section className="title">
+        <container className={styles.mainContainer}>
+            <section className={styles.title}>
                 <h1>Tic Tac Toe</h1>
                 <span>X - {currGame?.playerX || 0}:{currGame?.playerO || 0} - O</span>
             </section>
-            <section className="display">Player <span className="playerX">{`${currPlayer.name}`}</span>'s turn <span className="playerX">{`${currPlayer.spanEl}`}</span></section >
-            <section className="container" ref={tilesContainer}>
-                {board.map((x, i) => <div key={i} onClick={() => setInBoardIndex(x, i)} className="tile">{x}</div>)}
+            <section className={styles.display}>Player <span className={styles.playerX}>{`${currPlayer.name}`}</span>'s turn <span className={styles.playerX}>{`${currPlayer.spanEl}`}</span></section >
+            <section className={styles.container} ref={tilesContainer}>
+                {board.map((x, i) => <div key={i} onClick={() => setInBoardIndex(x, i)} className={styles.tile}>{x}</div>)}
             </section>
 
-            <button onClick={(e) => leaveRoom(e)}>Leave</button>
-        </>
+            <div className={styles.gameBtns}>
+                <button className={styles.primaryBtn} onClick={(e) => leaveRoom(e)}>Leave</button>
+            </div>
+        </container>
     )
 }
 

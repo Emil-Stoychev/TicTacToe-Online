@@ -100,10 +100,8 @@ export const HomeComponent = ({ socket, setOnlineUsers, onlineUsers, onlineGames
     }
 
     return (
-        <>
+        <section className={styles.mainContainer}>
             <h2 className={styles.mainTitle}>Tic Tac Toe Online</h2>
-
-            {user.token != null && <h2>Online players: {onlineUsers.length}</h2>}
 
             <LoginComponent gameOption={gameOption} setGameOption={setGameOption} setOnlineUsers={setOnlineUsers} setRoom={setRoom} />
 
@@ -140,7 +138,7 @@ export const HomeComponent = ({ socket, setOnlineUsers, onlineUsers, onlineGames
                 room={room}
             />}
 
-            {user.token != null && <ChatComponent socket={socket} messages={messages} setMessages={setMessages} />}
-        </>
+            {user.token != null && <ChatComponent socket={socket} messages={messages} setMessages={setMessages} onlineUsers={onlineUsers} />}
+        </section>
     )
 }

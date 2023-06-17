@@ -1,6 +1,8 @@
 import { useContext, useEffect, useState } from "react"
 import { useNavigate } from 'react-router-dom'
 
+import styles from './DifferentRooms.module.css'
+
 import * as gameService from '../../../services/gameService'
 import { AuthContext } from "../../../context/UserContext"
 import useGlobalErrorsHook from '../../../hooks/useGlobalError'
@@ -82,15 +84,14 @@ export const CreateRoomComponent = ({ cancelRoom, socket, gameOption, setGameOpt
 
     return (
         <>
-            <h2>Create Room</h2>
+            <h2 className={styles.mainHeader}>Create Room</h2>
 
-            <h2>RoomId: {room?.roomId}</h2>
+            <h2 className={styles.mainHeader}>RoomId: <span className={styles.roomCode}>{room?.roomId}</span></h2>
 
-            <h2>Waiting for players...</h2>
+            <h2 className={styles.mainHeader}>Waiting for players... {room.members.length}/2</h2>
 
-            <div className="createAndJoinRoomBtns">
-                <h2>{room.members.map(x => `${x}, `)}</h2>
-                <button onClick={(e) => cancelRoom(e, room?._id)}>Cancel</button>
+            <div className={styles.createAndJoinRoomBtns}>
+                <button className={styles.primaryBtn} onClick={(e) => cancelRoom(e, room?._id)}>Cancel</button>
             </div>
         </>
     )

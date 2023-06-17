@@ -1,0 +1,236 @@
+.backBtn {
+  position: absolute;
+  left: 1rem;
+  top: 1rem;
+  text-align: center;
+  font-size: 24px;
+  border-radius: 100px;
+  padding-right: 35px;
+  padding-left: 35px;
+  color: white;
+  background: #7a7064;
+  cursor: pointer;
+  text-shadow: 1px 1px 10px black;
+  transition-duration: 0.25s;
+  margin-bottom: 1rem;
+  margin-right: 1rem;
+}
+
+.backBtn:hover {
+  background: rgba(150, 255, 220, 0.795);
+  transform: scale(1.1);
+}
+
+.about-cont {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  color: white;
+  height: 100vh;
+  margin-bottom: 4rem;
+}
+
+.about-cont > h1 {
+  margin-bottom: 5rem;
+  user-select: none;
+}
+
+.about-cont > .about-contacts {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5rem;
+  position: relative;
+}
+
+.about-cont > .about-contacts > div {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  overflow: hidden;
+  transition: all 300ms ease-in-out;
+  display: flex;
+  flex-direction: column;
+  padding: 0.2rem 0.2rem;
+  gap: 2rem;
+  border-radius: 1rem;
+  cursor: pointer;
+}
+
+.about-cont > .about-contacts > div::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 120px;
+  height: 120px;
+  background: linear-gradient(0deg, transparent, #45f3ff, #45f3ff);
+  transform-origin: bottom right;
+  animation: animate 6s linear infinite;
+}
+
+.about-cont > .about-contacts > div::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 120px;
+  height: 120px;
+  background: linear-gradient(0deg, transparent, #45f3ff, #45f3ff);
+  transform-origin: bottom right;
+  animation: animate 6s linear infinite;
+  animation-delay: -3s;
+}
+
+@keyframes animate {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.about-cont > .about-contacts > div:hover,
+.numberCounting:hover {
+  transform: scale(1.1);
+}
+
+.about-cont > .about-contacts > div > i {
+  font-size: 80px;
+  width: 100%;
+  height: 100%;
+  background-color: #28292d;
+  border-radius: 1rem;
+  padding: 1rem;
+  z-index: 1;
+}
+
+.numberCounting-div {
+  position: relative;
+  width: 45vw;
+  display: flex;
+  justify-content: space-around;
+  gap: 10px;
+  margin-bottom: 2rem;
+  user-select: none;
+}
+
+.numberCounting {
+  width: 28vmin;
+  height: 28vmin;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  padding: 1em 0;
+  position: relative;
+  font-size: 16px;
+  border-radius: 0.5em;
+  background-color: #21242b;
+  border-bottom: 10px solid #45f3ff;
+  transition: all 300ms ease-in-out;
+}
+.numberCounting > i {
+  color: #45f3ff;
+  font-size: 2.5em;
+  text-align: center;
+}
+.numberCounting > span.num {
+  color: #ffffff;
+  display: grid;
+  place-items: center;
+  font-weight: 600;
+  font-size: 3em;
+}
+.numberCounting > span.text {
+  color: #e0e0e0;
+  font-size: 1em;
+  text-align: center;
+  pad: 0.7em 0;
+  font-weight: 400;
+  line-height: 0;
+}
+
+@media screen and (max-width: 1024px) {
+  .numberCounting {
+    height: 26vmin;
+    width: 26vmin;
+    font-size: 12px;
+  }
+
+  .numberCounting-div {
+    width: 85vw;
+  }
+}
+
+@media screen and (max-width: 770px) {
+  .about-cont > .about-contacts {
+    flex-wrap: wrap;
+    gap: 3rem;
+  }
+
+  .about-cont > .about-contacts > div {
+    width: 100px;
+    height: 100px;
+  }
+
+  .about-cont > .about-contacts > div > i {
+    font-size: 60px;
+  }
+
+  .about-cont > h1 {
+    margin-bottom: 3rem;
+  }
+
+  .numberCounting {
+    width: calc(50% - 40px);
+    height: 30vmin;
+    font-size: 14px;
+  }
+
+  .numberCounting-div {
+    width: 90vw;
+    flex-wrap: wrap;
+    gap: 30px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .numberCounting {
+    width: 100%;
+    height: 25vmin;
+    font-size: 8px;
+  }
+
+  .numberCounting-div {
+    gap: 15px;
+  }
+}
+
+@media screen and (max-width: 380px) {
+  .about-cont > h1 {
+    font-size: 18px;
+  }
+
+  .about-cont > .about-contacts {
+    gap: 1rem;
+  }
+}
+
+@media screen and (max-width: 380px) {
+  .about-cont > .about-contacts {
+    gap: 1rem;
+  }
+
+  .about-cont > .about-contacts > div {
+    width: 80px;
+    height: 80px;
+  }
+
+  .about-cont > .about-contacts > div > i {
+    font-size: 40px;
+  }
+}

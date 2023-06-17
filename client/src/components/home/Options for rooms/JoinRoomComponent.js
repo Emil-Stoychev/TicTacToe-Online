@@ -1,6 +1,8 @@
 import { useState, useEffect, useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
 
+import styles from './DifferentRooms.module.css'
+
 import * as gameService from '../../../services/gameService'
 import { AuthContext } from '../../../context/UserContext'
 import useGlobalErrorsHook from '../../../hooks/useGlobalError'
@@ -112,22 +114,21 @@ export const JoinRoomComponent = ({ cancelRoom, socket, gameOption, setGameOptio
 
     return (
         <>
-            <h2>Join room component</h2>
+            <h2 className={styles.mainHeader}>Join room</h2>
 
             <form className="joinRoomForm">
                 {room._id == '' &&
-                    <>
-                        <label htmlFor="roomId">Code</label>
-                        <input id="roomId" name="roomId" type="text" value={room?.roomId || ''} onChange={(e) => changeCodeHandler(e)} />
-                    </>
+                    <div className={styles.codeRoomInput}>
+                        <input name="roomId" type="text" value={room?.roomId || ''} onChange={(e) => changeCodeHandler(e)} placeholder='Code here' />
+                    </div>
                 }
 
-                <div className="createAndJoinRoomBtns">
+                <div className={styles.JoinRoomBtns}>
                     <h2>{room.members.map(x => `${x}, `)}</h2>
-                    <button onClick={(e) => cancelRoom(e, room?._id)}>Cancel</button>
+                    <button className={styles.primaryBtn} onClick={(e) => cancelRoom(e, room?._id)}>Cancel</button>
 
                     {room._id == '' &&
-                        <button onClick={(e) => joinRoomHandler(e)}>Join</button>
+                        <button className={styles.primaryBtn} onClick={(e) => joinRoomHandler(e)}>Join</button>
                     }
                 </div>
             </form >

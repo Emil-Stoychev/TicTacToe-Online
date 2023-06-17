@@ -1,8 +1,12 @@
+.mainContainer {
+  min-height: 100vh;
+}
 
 .mainTitle {
-    text-align: center;
-    margin: 5rem;
-    font-size: 32px;
-    letter-spacing: 4px;
-    color: rgb(150, 255, 220);
+  text-align: center;
+  padding: 2rem;
+  font-size: 42px;
+  letter-spacing: 4px;
+  color: rgb(150, 255, 220);
+  user-select: none;
 }

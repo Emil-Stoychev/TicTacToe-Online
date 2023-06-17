@@ -1,0 +1,88 @@
+.mainContainer {
+  display: block;
+  min-height: 90vh;
+}
+
+.gameBtns {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.primaryBtn {
+  text-align: center;
+  font-size: 24px;
+  border-radius: 100px;
+  padding-right: 35px;
+  padding-left: 35px;
+  color: white;
+  background: #7a7064;
+  cursor: pointer;
+  text-shadow: 1px 1px 10px black;
+  transition-duration: 0.25s;
+  margin-top: 3rem;
+}
+
+.primaryBtn:hover {
+  background: rgba(150, 255, 220, 0.795);
+  transform: scale(1.1);
+}
+
+.title {
+  color: white;
+  text-align: center;
+  font-size: 40px;
+  margin-top: 10%;
+}
+
+.display {
+  color: white;
+  font-size: 25px;
+  text-align: center;
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+.hide {
+  display: none;
+}
+
+.container {
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 33% 33% 33%;
+  grid-template-rows: 33% 33% 33%;
+  max-width: 300px;
+}
+
+.tile {
+  border: 1px solid white;
+  min-width: 100px;
+  min-height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 50px;
+  cursor: pointer;
+}
+
+.playerX {
+  color: #09c372;
+}
+
+.playerO {
+  color: #498afb;
+}
+
+.win1 {
+  color: #09c372;
+}
+
+.win2 {
+  color: #498afb;
+}
+
+.win3 {
+  color: #aa0b05;
+}

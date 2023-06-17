@@ -1,0 +1,57 @@
+.mainHeader {
+  text-align: center;
+  letter-spacing: 1px;
+  color: antiquewhite;
+  user-select: none;
+}
+
+.primaryBtn {
+  text-align: center;
+  font-size: 24px;
+  border-radius: 100px;
+  padding-right: 35px;
+  padding-left: 35px;
+  color: white;
+  background: #7a7064;
+  cursor: pointer;
+  text-shadow: 1px 1px 10px black;
+  transition-duration: 0.25s;
+  margin: 1rem;
+}
+
+.primaryBtn:hover {
+  background: rgba(150, 255, 220, 0.795);
+  transform: scale(1.1);
+}
+
+.createAndJoinRoomBtns {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.JoinRoomBtns {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.roomCode {
+  color: #fca740;
+  user-select: all;
+}
+
+.codeRoomInput {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.codeRoomInput input {
+  text-align: center;
+  border-radius: 1rem;
+  padding: 0.5rem;
+  background-color: black;
+  color: #fca740;
+}

@@ -129,7 +129,6 @@ export const LoginComponent = ({ gameOption, setGameOption, setOnlineUsers, setR
             <form className={styles.loginForm}>
                 <label className={styles.labelForUsername} htmlFor="username">Name</label>
                 <input disabled={user.token != null} className={styles.usernameInput} id="username" minLength={3} name="username" type="text" placeholder="John" value={user.username || ''} onChange={(e) => changeUsernameHandler(e)} />
-                {user.token != null && <button className={styles.primaryBtn} onClick={(e) => leave(e)}>Leave</button>}
 
                 {user.token == null
                     ? <button className={styles.primaryBtn} onClick={(e) => login(e)}>Play</button>
@@ -147,6 +146,7 @@ export const LoginComponent = ({ gameOption, setGameOption, setOnlineUsers, setR
                 <div className={styles.SettAndAboutDivBtns}>
                     <button onClick={() => navigate('/settings')}>Settings</button>
                     <button onClick={() => navigate('/about')}>About</button>
+                    {user.token != null && <button className={styles.primaryBtn} onClick={(e) => leave(e)}>Leave</button>}
                 </div>
             }
         </section>
