@@ -42,16 +42,6 @@ function App() {
     }
   }, [user])
 
-  useEffect(() => {
-    console.log('<>ONLINE USERS<>');
-    console.log(onlineUsers);
-  }, [onlineUsers])
-
-  useEffect(() => {
-    console.log('<>ONLINE GAMES<>');
-    console.log(onlineGames);
-  }, [onlineGames])
-
   return (
     <div className="App">
       <Routes>

@@ -32,24 +32,6 @@ export const RandomRoomComponent = ({ cancelRoom, socket, gameOption, setGameOpt
         }
     }, [])
 
-    // const randomRoomHandler = (e) => {
-    //     e.preventDefault()
-
-    //     let data = {
-    //         option: gameOption.option || undefined
-    //     }
-
-    //     gameService.enterRoom(localStorage.getItem('sessionStorage'), data)
-    //         .then(res => {
-    //             if (!res.message) {
-    //                 setRoom(res.newRoom)
-    //                 setGameOption({ option: res.userGameOption, gameId: res.newRoom._id })
-    //             } else {
-    //                 console.log(res);
-    //             }
-    //         })
-    // }
-
     useEffect(() => {
         if (gameOption.option != undefined && gameOption.option != '') {
             socket.current?.emit('random-game', { room: room, userId: user._id })
@@ -62,7 +44,6 @@ export const RandomRoomComponent = ({ cancelRoom, socket, gameOption, setGameOpt
             setTimeout(() => {
                 navigate(`/game/${room._id}`)
             }, 3000);
-            console.log('NOW ROOM IS FULL');
         }
     }, [room.members])
 

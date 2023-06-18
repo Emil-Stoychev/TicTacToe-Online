@@ -14,6 +14,7 @@ import { AuthContext } from '../../context/UserContext'
 import useGlobalErrorsHook from '../../hooks/useGlobalError'
 import { ChatComponent } from './chat/ChatComponent'
 import { LoginComponent } from './login/LoginComponent'
+import { GameStatisticComponent } from './statistic/GameStatisticComponent'
 
 
 export const HomeComponent = ({ socket, setOnlineUsers, onlineUsers, onlineGames, setOnlineGames }) => {
@@ -139,6 +140,8 @@ export const HomeComponent = ({ socket, setOnlineUsers, onlineUsers, onlineGames
             />}
 
             {user.token != null && <ChatComponent socket={socket} messages={messages} setMessages={setMessages} onlineUsers={onlineUsers} />}
+
+            {user.token != null && <GameStatisticComponent onlineGames={onlineGames} />}
         </section>
     )
 }

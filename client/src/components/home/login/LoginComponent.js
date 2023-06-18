@@ -52,12 +52,10 @@ export const LoginComponent = ({ gameOption, setGameOption, setOnlineUsers, setR
                             gameId: '',
                             token: null
                         })
-                        console.log(res);
                     }
                 })
         } else {
             setErrors({ message: 'Username must be at least 3 characters!', type: '' })
-            console.log('Username must be at least 3 characters!');
         }
     }
 
@@ -65,7 +63,7 @@ export const LoginComponent = ({ gameOption, setGameOption, setOnlineUsers, setR
         e.preventDefault()
 
         if (gameOption.gameId != '' && gameOption.gameId != undefined && gameOption.gameId != null) {
-            return console.log({ message: 'First u must leave room!' });
+            return setErrors({ message: 'First u must leave room!', type: '' });
         }
 
         gameService.leaveUser(user)
@@ -119,6 +117,7 @@ export const LoginComponent = ({ gameOption, setGameOption, setOnlineUsers, setR
                         gameId: '',
                     }))
                     setGameOption({ option: '', gameId: '' })
+                    setErrors({ message: res, type: '' })
                     console.log(res);
                 }
             })

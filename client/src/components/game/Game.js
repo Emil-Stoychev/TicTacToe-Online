@@ -66,7 +66,7 @@ const GameComponent = ({ socket }) => {
                         receiverId: members?.firstP?._id != user._id ? members.firstP._id : members.secondP._id,
                     })
                 } else {
-                    console.log(res);
+                    setErrors({ message: res, type: '' })
                 }
 
                 navigate('/')

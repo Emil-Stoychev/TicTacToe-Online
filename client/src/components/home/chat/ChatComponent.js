@@ -5,9 +5,11 @@ import styles from './Chat.module.css'
 
 import * as gameService from '../../../services/gameService'
 import { AuthContext } from "../../../context/UserContext"
+import useGlobalErrorsHook from "../../../hooks/useGlobalError"
 
 export const ChatComponent = ({ socket, messages, setMessages, onlineUsers }) => {
     let { user, setUser } = useContext(AuthContext)
+    let [errors, setErrors] = useGlobalErrorsHook()
 
     let [currMessage, setCurrMessage] = useState('')
     const [receivedMessage, setReceivedMessage] = useState(null)
@@ -20,7 +22,6 @@ export const ChatComponent = ({ socket, messages, setMessages, onlineUsers }) =>
     }, [])
 
     const sendMessage = (e) => {
-        console.log(currMessage);
         if (currMessage != '' && currMessage.length != 0 && currMessage.trim() != '') {
             gameService.sendMessage(localStorage.getItem('sessionStorage'), currMessage)
                 .then(res => {
@@ -32,11 +33,9 @@ export const ChatComponent = ({ socket, messages, setMessages, onlineUsers }) =>
 
                         setCurrMessage('')
                     } else {
-                        console.log(res);
+                        setErrors({ message: res, type: '' })
                     }
                 })
-        } else {
-            console.log('Type smth');
         }
     }
 

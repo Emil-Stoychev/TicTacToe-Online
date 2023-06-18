@@ -1,0 +1,13 @@
+.mainSection {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  background-color: rgba(255, 255, 255, 0.082);
+  color: antiquewhite;
+  padding: 1rem;
+  width: 90%;
+  margin: 0 auto;
+  border-radius: 1rem;
+  user-select: none;
+}

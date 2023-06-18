@@ -37,7 +37,6 @@ export const JoinRoomComponent = ({ cancelRoom, socket, gameOption, setGameOptio
             setTimeout(() => {
                 navigate(`/game/${room._id}`)
             }, 3000);
-            console.log('NOW ROOM IS FULL');
         }
     }, [room.members])
 
@@ -64,7 +63,6 @@ export const JoinRoomComponent = ({ cancelRoom, socket, gameOption, setGameOptio
                         setGameOption({ option: res.userGameOption, gameId: res.newRoom._id })
                     } else {
                         setErrors({ message: res.message, type: '' })
-                        console.log(res);
                     }
                 })
         } else {
