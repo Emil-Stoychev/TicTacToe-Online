@@ -104,3 +104,22 @@ export const getMessages = (skipNumber = 0) => {
     return fetch(`${URL}chat/messages/${skipNumber}`)
         .then(res => res.json())
 }
+
+
+// GET GAME STATISTIC
+
+export const getGameStatistic = () => {
+    return fetch(`${URL}users/getGameStatistic`)
+        .then(res => res.json())
+}
+
+export const rateUs = (token, number) => {
+    return fetch(`${URL}users/rateUs/${token}`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ num: number })
+    })
+        .then(res => res.json())
+}

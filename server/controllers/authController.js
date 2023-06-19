@@ -28,5 +28,18 @@ router.get('/getUserByUsernames/:token/:searchValue', authMiddleware, async (req
 })
 
 
+router.get('/getGameStatistic', async (req, res) => {
+    res.json(await authService.getGameStatistic())
+})
+
+router.post('/rateUs/:token', authMiddleware, async (req, res) => {
+    let result = await authService.rateUs(req.body?.num, req.params?.user?._id)
+
+    res.json(result)
+})
+
+
+
+
 
 module.exports = router

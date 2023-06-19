@@ -1,19 +1,30 @@
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom'
 import styles from './About.module.css'
 
+
 import * as gameService from '../../../services/gameService'
+import useGlobalErrorsHook from '../../../hooks/useGlobalError';
+import { AuthContext } from '../../../context/UserContext';
 
 const AboutComponent = () => {
     const navigate = useNavigate()
     const [countCont, setCountCont] = useState([0, 0, 0])
+    const [isRate, setIsRate] = useState(false)
+    let { user, setUser } = useContext(AuthContext)
+    let [errors, setErrors] = useGlobalErrorsHook()
 
-    let valueDisplays = document.querySelectorAll(".num");
+    let valueDisplays = document.querySelectorAll("#num");
     let interval = 2000;
 
     useEffect(() => {
-        // gameService.gymBuddiesInNumbers()
-        //     .then(res => setCountCont([res.users, res.trainingPrograms, res.fiveStars]))
+        gameService.getGameStatistic()
+            .then(res => {
+                setCountCont([res.happyUsers, res.playedUsers, res.fiveStars])
+                if (res.peoples.includes(user?._id)) {
+                    setIsRate(true)
+                }
+            })
     }, [])
 
     useEffect(() => {
@@ -31,26 +42,79 @@ const AboutComponent = () => {
         });
     }, [countCont])
 
+    const rateHandler = (e) => {
+        if (e.target.value != 0 && e.target.value != undefined && e.target.value != null) {
+            gameService.rateUs(localStorage.getItem('sessionStorage'), e.target.value)
+                .then(res => {
+                    if (!res.message) {
+                        setErrors({ message: 'Thank you for your rating!', type: '' })
+
+                        if (e.target.value == 5) {
+                            setCountCont(state => [
+                                state[0] + 1,
+                                state[1] + 1,
+                                state[2] + 1,
+                            ])
+                        } else if (e.target.value >= 3) {
+                            setCountCont(state => [
+                                state[0] + 1,
+                                state[1] + 1,
+                                state[2],
+                            ])
+                        } else {
+                            setCountCont(state => [
+                                state[0],
+                                state[1] + 1,
+                                state[2],
+                            ])
+                        }
+                    } else {
+                        setErrors({ message: res.message, type: '' })
+                    }
+                })
+        }
+    }
+
     return (
         <div className={styles?.['about-cont']}>
             <button onClick={() => navigate('/')} className={styles.backBtn}>Back</button>
 
             <h1>Tic Tac Toe in numbers</h1>
 
+            {localStorage.getItem('sessionStorage') != undefined && !isRate &&
+                <>
+                    <h2>Select your rate</h2>
+                    <div className={styles.rate} >
+                        <input type="radio" id="star5" onClick={(e) => rateHandler(e)} name="rate" value="5" />
+                        <label htmlFor="star5" title="text">5 stars</label>
+                        <input type="radio" id="star4" onClick={(e) => rateHandler(e)} name="rate" value="4" />
+                        <label htmlFor="star4" title="text">4 stars</label>
+                        <input type="radio" id="star3" onClick={(e) => rateHandler(e)} name="rate" value="3" />
+                        <label htmlFor="star3" title="text">3 stars</label>
+                        <input type="radio" id="star2" onClick={(e) => rateHandler(e)} name="rate" value="2" />
+                        <label htmlFor="star2" title="text">2 stars</label>
+                        <input type="radio" id="star1" onClick={(e) => rateHandler(e)} name="rate" value="1" />
+                        <label htmlFor="star1" title="text">1 star</label>
+                    </div>
+                    <hr />
+                </>
+            }
+
+
             <div className={styles?.['numberCounting-div']}>
                 <div className={styles.numberCounting}>
                     <i className="fas fa-smile-beam"></i>
-                    <span className={styles.num} data-val={countCont[0]}>0</span>
+                    <span id='num' className={styles.num} data-val={countCont[0]}>0</span>
                     <span className={styles.text}>Happy Users</span>
                 </div>
                 <div className={styles.numberCounting}>
                     <i className="fas fa-list"></i>
-                    <span className={styles.num} data-val={countCont[1]}>0</span>
+                    <span id='num' className={styles.num} data-val={countCont[1]}>0</span>
                     <span className={styles.text}>Played users</span>
                 </div>
                 <div className={styles.numberCounting}>
                     <i className="fas fa-star"></i>
-                    <span className={styles.num} data-val={countCont[2] * 0.95}>0</span>
+                    <span id='num' className={styles.num} data-val={countCont[2]}>0</span>
                     <span className={styles.text}>Five Stars</span>
                 </div>
             </div>
