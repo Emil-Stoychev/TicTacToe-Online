@@ -25,6 +25,7 @@ export const CreateRoomComponent = ({ cancelRoom, socket, gameOption, setGameOpt
                     setRoom(res.newRoom)
                     setGameOption({ option: res.userGameOption, gameId: res.newRoom._id })
                 } else {
+                    setErrors({ message: res.message, type: '' })
                     console.log(res);
                 }
             })

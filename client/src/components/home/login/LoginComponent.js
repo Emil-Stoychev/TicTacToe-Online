@@ -112,13 +112,27 @@ export const LoginComponent = ({ gameOption, setGameOption, setOnlineUsers, setR
 
                     setGameOption({ option: option, gameId: res._id })
                 } else {
-                    setUser(state => ({
-                        ...state,
-                        gameId: '',
-                    }))
-                    setGameOption({ option: '', gameId: '' })
-                    setErrors({ message: res, type: '' })
-                    console.log(res);
+
+                    if (res.message == 'User not found!') {
+                        localStorage.removeItem('sessionStorage')
+
+                        setErrors({ message: 'User not found, please login!', type: '' })
+                        setUser({
+                            username: '',
+                            uuid: '',
+                            _id: '',
+                            gameId: '',
+                            token: null
+                        })
+                        navigate('/')
+                    } else {
+                        setUser(state => ({
+                            ...state,
+                            gameId: '',
+                        }))
+                        setGameOption({ option: '', gameId: '' })
+                        setErrors({ message: res.message, type: '' })
+                    }
                 }
             })
     }
