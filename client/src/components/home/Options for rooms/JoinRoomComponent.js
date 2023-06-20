@@ -122,7 +122,9 @@ export const JoinRoomComponent = ({ cancelRoom, socket, gameOption, setGameOptio
                 }
 
                 <div className={styles.JoinRoomBtns}>
-                    <h2>{room.members.map(x => `${x}, `)}</h2>
+                    {room?.members?.length == 2 &&
+                        <h2 className={styles.mainHeader}>Waiting for players... {room.members.length}/2</h2>
+                    }
                     <button className={styles.primaryBtn} onClick={(e) => cancelRoom(e, room?._id)}>Cancel</button>
 
                     {room._id == '' &&

@@ -30,6 +30,11 @@ const GameComponent = ({ socket }) => {
             gameService.getGame(gameId, localStorage.getItem('sessionStorage'))
                 .then(res => {
                     if (!res.message) {
+                        if (res?.members.length == 1) {
+                            console.log('REDIRECTED 1');
+                            navigate('/')
+                            return
+                        }
                         setBoard(res.board)
                         setCurrGame(res)
 
@@ -50,6 +55,14 @@ const GameComponent = ({ socket }) => {
             navigate('/')
         }
     }, [])
+
+    useEffect(() => {
+        if (currGame?.members?.length == 1) {
+            console.log('REDIRECTED 2');
+            navigate('/')
+            return
+        }
+    }, [currGame])
 
     const leaveRoom = (e) => {
         gameService.leaveRoom(localStorage.getItem('sessionStorage'))
