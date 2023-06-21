@@ -1,9 +1,9 @@
 import { useNavigate } from 'react-router-dom'
 
-import styles from './Settings.module.css'
+import styles from './Rules.module.css'
 import { useEffect } from 'react'
 
-const SettingsComponent = () => {
+const RulesComponent = () => {
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -54,4 +54,4 @@ const SettingsComponent = () => {
     )
 }
 
-export default SettingsComponent
+export default RulesComponent

@@ -15,7 +15,7 @@ import { HomeComponent } from './components/home/Home'
 import { AuthContext } from './context/UserContext';
 
 const LazyGameComponent = lazy(() => import('./components/game/Game'))
-const LazySettingsComponent = lazy(() => import('./components/core/settings/Settings'))
+const LazySettingsComponent = lazy(() => import('./components/core/settings/Rules'))
 const LazyAboutComponent = lazy(() => import('./components/core/about/About'))
 
 function App() {
@@ -60,7 +60,7 @@ function App() {
 
         <Route path='/game/:gameId' element={<Suspense fallback={<LoadingSpinner />}><LazyGameComponent socket={socket} /></Suspense>} />
 
-        <Route path='/settings' element={<Suspense fallback={<LoadingSpinner />}><LazySettingsComponent /></Suspense>} />
+        <Route path='/rules' element={<Suspense fallback={<LoadingSpinner />}><LazySettingsComponent /></Suspense>} />
 
         <Route path='/about' element={<Suspense fallback={<LoadingSpinner />}><LazyAboutComponent /></Suspense>} />
 

@@ -161,7 +161,7 @@ export const LoginComponent = ({ gameOption, setGameOption, setOnlineUsers, setR
 
             {gameOption.option == '' &&
                 <div className={styles.SettAndAboutDivBtns}>
-                    <button onClick={() => navigate('/settings')}><i className="fa-solid fa-lightbulb"></i></button>
+                    <button onClick={() => navigate('/rules')}><i className="fa-solid fa-lightbulb"></i></button>
                     <button onClick={() => navigate('/about')}><i className="fa-solid fa-address-card"></i></button>
                     {user.token != null && <button className={styles.primaryBtn} onClick={(e) => leave(e)}><i className="fa-solid fa-right-from-bracket"></i></button>}
                 </div>
