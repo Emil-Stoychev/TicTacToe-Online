@@ -47,7 +47,7 @@ export const LoginComponent = ({ gameOption, setGameOption, setOnlineUsers, setR
                         setGameOption({ option: '', gameId: '' })
                     } else {
                         setGameOption({ option: '', gameId: '' })
-                        setErrors({ message: 'Please log in again!', type: 'Unauthorized!' })
+                        setErrors({ message: res.message || 'Please log in again!', type: 'Unauthorized!' })
                         localStorage.removeItem('sessionStorage')
                         setUser({
                             username: '',

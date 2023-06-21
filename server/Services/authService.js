@@ -88,6 +88,8 @@ const initUser = async (data) => {
 
                 await gameStats.save()
             }
+        } else {
+            return { message: 'This user already exist!' }
         }
 
         let result = await new Promise((resolve, reject) => {
