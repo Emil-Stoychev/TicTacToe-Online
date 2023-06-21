@@ -66,14 +66,22 @@
   }
 }
 
-@media screen and (max-width: 420px) {
+@media screen and (max-width: 530px) {
   footer p {
     font-size: 12px;
   }
-}
 
-@media screen and (max-width: 270px) {
   footer p {
-    padding: 0 2rem;
+    flex-direction: column;
+  }
+
+  .socialMedia {
+    flex-direction: column;
+  }
+
+  .socialMedia i {
+    font-size: 62px;
+    cursor: pointer;
+    transition: all 300ms ease-in-out;
   }
 }

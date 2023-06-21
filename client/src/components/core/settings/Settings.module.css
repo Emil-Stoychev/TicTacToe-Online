@@ -37,8 +37,7 @@
   align-items: center;
   color: white;
   width: 80%;
-  height: 100vh;
-  margin: 0 auto;
+  margin: 15rem auto;
   user-select: none;
   letter-spacing: 1px;
 }
@@ -46,7 +45,7 @@
 .firstDiv {
   display: flex;
   justify-content: left;
-  background-color: #00000036;
+  background-color: #000000b7;
   padding: 2rem 2rem;
   border-top-left-radius: 1rem;
   border-top-right-radius: 1rem;
@@ -62,7 +61,7 @@
   display: flex;
   flex-direction: column;
   justify-content: left;
-  background-color: #00000036;
+  background-color: #000000b7;
   padding: 2rem 3rem;
   border-bottom-left-radius: 1rem;
   border-bottom-right-radius: 1rem;
@@ -79,4 +78,51 @@
   color: #498afb;
   font-weight: bolder;
   font-size: 20px;
+}
+
+@media screen and (max-width: 800px) {
+  .mainTitle {
+    font-size: 32px;
+  }
+
+  .settings-cont {
+    width: 95%;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .settings-cont {
+    margin: 6rem auto;
+  }
+
+  .mainTitle {
+    font-size: 28px;
+  }
+}
+
+@media screen and (max-width: 445px) {
+  .mainTitle {
+    font-size: 24px;
+  }
+
+  .firstDiv {
+    font-size: 14px;
+    padding: 2rem 0.5rem;
+  }
+
+  .secondDiv {
+    font-size: 14px;
+    padding: 2rem 1rem;
+  }
+}
+
+@media screen and (max-width: 345px) {
+  .mainTitle {
+    padding: 2rem 0;
+    font-size: 20px;
+  }
+
+  .firstDiv {
+    padding: 2rem 0;
+  }
 }

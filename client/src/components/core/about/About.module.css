@@ -28,7 +28,7 @@
   align-items: center;
   text-align: center;
   color: white;
-  height: 100vh;
+  height: 120vh;
   margin-bottom: 4rem;
 }
 
@@ -233,6 +233,12 @@
     width: 90vw;
     flex-wrap: wrap;
     gap: 30px;
+  }
+}
+
+@media screen and (max-width: 550px) {
+  .about-cont {
+    height: 150vh;
   }
 }
 

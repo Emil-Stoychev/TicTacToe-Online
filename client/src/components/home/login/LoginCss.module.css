@@ -45,7 +45,7 @@
   margin: 0 auto;
   color: antiquewhite;
   letter-spacing: 8px;
-  font-size: 20px;
+  font-size: 28px;
 }
 
 /* BTNS */
@@ -69,4 +69,34 @@
 .primaryBtn:hover {
   background: rgba(150, 255, 220, 0.795);
   transform: scale(1.1);
+}
+
+@media screen and (max-width: 350px) {
+  .labelForUsername {
+    font-size: 24px;
+  }
+
+  .SettAndAboutDivBtns {
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+  }
+
+  .SettAndAboutDivBtns button,
+  .primaryBtn {
+    font-size: 20px;
+  }
+}
+
+@media screen and (max-width: 260px) {
+  .usernameInput {
+    width: 200px;
+  }
+}
+
+@media screen and (max-width: 200px) {
+  .usernameInput {
+    width: 150px;
+    font-size: 20px;
+  }
 }

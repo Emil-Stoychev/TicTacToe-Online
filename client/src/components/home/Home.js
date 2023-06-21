@@ -102,7 +102,29 @@ export const HomeComponent = ({ socket, setOnlineUsers, onlineUsers, onlineGames
 
     return (
         <section className={styles.mainContainer}>
-            <h2 className={styles.mainTitle}>Tic Tac Toe Online</h2>
+
+            <div className={styles.stage}>
+                <div className={styles.layer}></div>
+                <div className={styles.layer}></div>
+                <div className={styles.layer}></div>
+                <div className={styles.layer}></div>
+                <div className={styles.layer}></div>
+                <div className={styles.layer}></div>
+                <div className={styles.layer}></div>
+                <div className={styles.layer}></div>
+                <div className={styles.layer}></div>
+                <div className={styles.layer}></div>
+                <div className={styles.layer}></div>
+                <div className={styles.layer}></div>
+                <div className={styles.layer}></div>
+                <div className={styles.layer}></div>
+                <div className={styles.layer}></div>
+                <div className={styles.layer}></div>
+                <div className={styles.layer}></div>
+                <div className={styles.layer}></div>
+                <div className={styles.layer}></div>
+                <div className={styles.layer}></div>
+            </div>
 
             <LoginComponent gameOption={gameOption} setGameOption={setGameOption} setOnlineUsers={setOnlineUsers} setRoom={setRoom} />
 
