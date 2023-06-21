@@ -35,9 +35,9 @@ export const GameStatisticComponent = ({ onlineGames }) => {
         <section className={styles.mainSection}>
             <h2>Full rooms: {games.full}</h2>
             <span className={styles.nameAndMsgTrait}>|</span>
-            <h2>Game with create mode: {games.create}</h2>
+            <h2>Create mode: {games.create}</h2>
             <span className={styles.nameAndMsgTrait}>|</span>
-            <h2>Game with random mode: {games.random}</h2>
+            <h2>Random mode: {games.random}</h2>
         </section>
     )
 }

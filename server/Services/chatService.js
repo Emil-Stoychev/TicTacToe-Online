@@ -75,6 +75,7 @@ const addMessage = async (message, senderId) => {
             chatId: chat[0]._id,
             senderId,
             text: message,
+            createdAt: new Date()
         }
 
         chat[0]?.container.push(msg)

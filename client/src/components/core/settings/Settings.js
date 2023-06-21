@@ -1,9 +1,14 @@
 import { useNavigate } from 'react-router-dom'
 
 import styles from './Settings.module.css'
+import { useEffect } from 'react'
 
 const SettingsComponent = () => {
     const navigate = useNavigate()
+
+    useEffect(() => {
+        window.onload = window.scrollTo(0, 0)
+      }, [])
 
     return (
         <section className={styles?.['settings-cont']}>

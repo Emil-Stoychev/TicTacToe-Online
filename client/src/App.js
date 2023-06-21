@@ -42,6 +42,10 @@ function App() {
     }
   }, [user])
 
+  useEffect(() => {
+    window.onload = window.scrollTo(0, 0)
+  }, [])
+
   return (
     <div className="App">
       <Routes>

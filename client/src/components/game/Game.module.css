@@ -54,6 +54,7 @@
   grid-template-columns: 33% 33% 33%;
   grid-template-rows: 33% 33% 33%;
   max-width: 300px;
+  background-color: rgba(0, 0, 0, 0.712);
 }
 
 .tile {
@@ -86,3 +87,63 @@
 .win3 {
   color: #aa0b05;
 }
+
+
+.title {
+  color: white;
+  text-align: center;
+  font-size: 40px;
+  margin-top: 10%;
+}
+
+@media screen and (max-width: 400px) {
+  .title {
+    font-size: 30px;
+  }
+}
+
+@media screen and (max-width: 350px) {
+  .display {
+    font-size: 20px;
+  }
+}
+
+@media screen and (max-width: 300px) {
+  .container {
+    max-width: 250px;
+  }
+
+  .tile {
+    min-width: 50px;
+    min-height: 90px;
+  }
+
+  .display {
+    font-size: 16px;
+  }
+
+  .title {
+    font-size: 25px;
+  }
+}
+
+@media screen and (max-width: 250px) {
+  .container {
+    max-width: 200px;
+    height: 90%;
+  }
+
+  .tile {
+    min-width: 50px;
+    min-height: 90px;
+  }
+
+  .display {
+    font-size: 14px;
+  }
+
+  .title {
+    font-size: 20px;
+  }
+}
+

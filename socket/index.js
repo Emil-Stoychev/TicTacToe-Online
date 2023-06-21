@@ -232,16 +232,6 @@ io.on('connection', (socket) => {
         }
     })
 
-    socket.on("sendNotification", ({ senderId, receiverId }) => {
-        const receiver = getUser(receiverId)
-
-        if (receiver != undefined) {
-            io.to(receiver.socketId).emit("getNotification", {
-                senderId,
-            })
-        }
-    })
-
     socket.on('send-message', (data) => {
         if (data != null) {
             // socket.broadcast.emit() THIS WILL SEND MESSAGE FOR ALL USERS WITHOUT ME

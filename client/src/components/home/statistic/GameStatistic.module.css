@@ -3,11 +3,39 @@
   justify-content: center;
   align-items: center;
   gap: 1rem;
-  background-color: rgba(255, 255, 255, 0.082);
+  background-color: rgba(0, 0, 0, 0.87);
   color: antiquewhite;
   padding: 1rem;
   width: 90%;
   margin: 0 auto;
-  border-radius: 1rem;
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
   user-select: none;
 }
+
+
+@media screen and (max-width: 1000px) {
+  .mainSection {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .nameAndMsgTrait {
+    rotate: -90deg;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .mainSection {
+    font-size: 14px;
+  }
+}
+
+@media screen and (max-width: 370px) {
+  .mainSection {
+    font-size: 10px;
+  }
+}
+
+

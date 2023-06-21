@@ -24,6 +24,7 @@ const GameComponent = ({ socket }) => {
     const navigate = useNavigate()
 
     useEffect(() => {
+        window.onload = window.scrollTo(0, 0)
         let gameId = window.location.pathname.split('/game/')[1]
 
         if (gameId == user?.gameId) {
@@ -31,7 +32,6 @@ const GameComponent = ({ socket }) => {
                 .then(res => {
                     if (!res.message) {
                         if (res?.members.length == 1) {
-                            console.log('REDIRECTED 1');
                             navigate('/')
                             return
                         }
@@ -58,7 +58,6 @@ const GameComponent = ({ socket }) => {
 
     useEffect(() => {
         if (currGame?.members?.length == 1) {
-            console.log('REDIRECTED 2');
             navigate('/')
             return
         }
@@ -232,16 +231,16 @@ const GameComponent = ({ socket }) => {
     return (
         <container className={styles.mainContainer}>
             <section className={styles.title}>
-                <h1>Tic Tac Toe</h1>
-                <span>X - {currGame?.playerX || 0}:{currGame?.playerO || 0} - O</span>
+                <h1>Game</h1>
+                <span><span className={styles.playerX}>X</span> - {currGame?.playerX || 0}:{currGame?.playerO || 0} - <span className={styles.playerO}>O</span></span>
             </section>
-            <section className={styles.display}>Player <span className={styles.playerX}>{`${currPlayer.name}`}</span>'s turn <span className={styles.playerX}>{`${currPlayer.spanEl}`}</span></section >
+            <section className={styles.display}>Player <span className={currPlayer?.spanEl == 'X' ? styles.playerX : styles.playerO}>{`${currPlayer.name}`}</span>'s turn <span className={currPlayer?.spanEl == 'X' ? styles.playerX : styles.playerO}>{`${currPlayer.spanEl}`}</span></section >
             <section className={styles.container} ref={tilesContainer}>
-                {board.map((x, i) => <div key={i} onClick={() => setInBoardIndex(x, i)} className={styles.tile}>{x}</div>)}
+                {board.map((x, i) => <div key={i} onClick={() => setInBoardIndex(x, i)} className={styles.tile}><span className={x == 'X' ? styles.playerX : styles.playerO}>{x}</span></div>)}
             </section>
 
             <div className={styles.gameBtns}>
-                <button className={styles.primaryBtn} onClick={(e) => leaveRoom(e)}>Leave</button>
+                <button className={styles.primaryBtn} onClick={(e) => leaveRoom(e)}><i className="fa-solid fa-right-from-bracket"></i></button>
             </div>
         </container>
     )

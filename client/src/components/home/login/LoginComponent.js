@@ -1,6 +1,6 @@
 import styles from './LoginCss.module.css'
 
-import { useContext } from 'react'
+import { useContext, useEffect } from 'react'
 import * as gameService from '../../../services/gameService'
 import { AuthContext } from '../../../context/UserContext'
 import useGlobalErrorsHook from '../../../hooks/useGlobalError'
@@ -12,6 +12,10 @@ export const LoginComponent = ({ gameOption, setGameOption, setOnlineUsers, setR
     let { user, setUser } = useContext(AuthContext)
     let [errors, setErrors] = useGlobalErrorsHook()
     const navigate = useNavigate()
+
+    useEffect(() => {
+        window.onload = window.scrollTo(0, 0)
+      }, [])
 
     const changeUsernameHandler = (e) => {
         setUser(state => ({
@@ -147,7 +151,7 @@ export const LoginComponent = ({ gameOption, setGameOption, setOnlineUsers, setR
                     ? <button className={styles.primaryBtn} onClick={(e) => login(e)}>Play</button>
                     :
                     gameOption.option == '' &&
-                    <div className="createAndJoinRoomBtns">
+                    <div className={styles.createAndJoinRoomBtns}>
                         <button className={styles.primaryBtn} onClick={(e) => enterRoom(e, 'create')}>Create room</button>
                         <button className={styles.primaryBtn} onClick={(e) => enterRoom(e, 'join')}>Join room</button>
                         <button className={styles.primaryBtn} onClick={(e) => enterRoom(e, 'random')}>Random room</button>
@@ -157,9 +161,9 @@ export const LoginComponent = ({ gameOption, setGameOption, setOnlineUsers, setR
 
             {gameOption.option == '' &&
                 <div className={styles.SettAndAboutDivBtns}>
-                    <button onClick={() => navigate('/settings')}>Settings</button>
-                    <button onClick={() => navigate('/about')}>About</button>
-                    {user.token != null && <button className={styles.primaryBtn} onClick={(e) => leave(e)}>Leave</button>}
+                    <button onClick={() => navigate('/settings')}><i className="fa-solid fa-lightbulb"></i></button>
+                    <button onClick={() => navigate('/about')}><i className="fa-solid fa-address-card"></i></button>
+                    {user.token != null && <button className={styles.primaryBtn} onClick={(e) => leave(e)}><i className="fa-solid fa-right-from-bracket"></i></button>}
                 </div>
             }
         </section>

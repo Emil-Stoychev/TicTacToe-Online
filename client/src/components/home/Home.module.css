@@ -169,7 +169,6 @@
     perspective: 9999px;
     transform-style: preserve-3d;
   }
-  
 }
 
 @media screen and (max-width: 360px) {

@@ -9,7 +9,7 @@
 body {
   width: 100%;
   height: 100vh;
-  background: linear-gradient(to right, rgba(65, 64, 64, 0.3) 0%, rgba(0, 0, 0, 0.5) 50%, rgba(65, 64, 64, 0.3) 100%), url('../public/tictactoe-background.png');
+  background: linear-gradient(to right, rgba(65, 64, 64, 0.3) 100%, rgba(0, 0, 0, 0.5) 50%, rgba(65, 64, 64, 0.3) 100%), url('../public/tictactoe-background.png');
   background-position: center;
   animation: gradientAnimation 100s linear infinite alternate;
 }

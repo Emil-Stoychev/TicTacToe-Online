@@ -33,6 +33,7 @@ export const HomeComponent = ({ socket, setOnlineUsers, onlineUsers, onlineGames
     const navigate = useNavigate()
 
     useEffect(() => {
+        window.onload = window.scrollTo(0, 0)
         let token = localStorage.getItem('sessionStorage')
 
         if (token != null) {
@@ -69,10 +70,6 @@ export const HomeComponent = ({ socket, setOnlineUsers, onlineUsers, onlineGames
                 setMessages(res)
             })
     }, [])
-
-    const goToTop = () => {
-        window.onload = window.scrollTo(0, 0)
-    }
 
     const cancelRoom = (e, gameId) => {
         socket.current?.emit('remove-game', { gameId: gameId, userId: user._id })

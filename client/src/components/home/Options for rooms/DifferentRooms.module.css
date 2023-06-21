@@ -55,3 +55,20 @@
   background-color: black;
   color: #fca740;
 }
+
+@media screen and (max-width: 300px) {
+  .JoinRoomBtns button {
+    margin: 1rem 0.2rem;
+  }
+}
+
+@media screen and (max-width: 220px) {
+  .JoinRoomBtns button {
+    font-size: 18px;
+    padding: 0.5rem 1.5rem;
+  }
+
+  .codeRoomInput input {
+    width: 80%;
+  }
+}

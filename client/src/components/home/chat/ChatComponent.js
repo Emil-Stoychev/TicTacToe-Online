@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useContext } from "react"
 import InputEmoji from 'react-input-emoji'
 
+import { format } from "timeago.js";
 import styles from './Chat.module.css'
 
 import * as gameService from '../../../services/gameService'
@@ -86,7 +87,12 @@ export const ChatComponent = ({ socket, messages, setMessages, onlineUsers }) =>
                 <div className={styles?.['chat-body']} ref={scrollBody}>
                     {messages.length == 0
                         ? <h2>No messages yet!</h2>
-                        : messages.map(x => <div className={styles.message} key={x._id}><b className={styles.senderName}>{x.senderName}</b> <span className={styles.nameAndMsgTrait}>|</span> {x.text}</div>)}
+                        : messages.map(x =>
+                            <div key={x._id}>
+                                <div className={styles.message}><b className={styles.senderName}>{x.senderName}</b> <span className={styles.nameAndMsgTrait}>|</span> {x.text}</div>
+                                <span className={styles.createdAt}>{format(x?.createdAt)}</span>
+                            </div>
+                        )}
                 </div>
                 {/* <div className={styles?.['chat-send']}>
                     <input type='text' onKeyDown={onEnterClick} value={currMessage} onChange={(e) => setCurrMessage(e.target.value)} placeholder='Type your message here...' />

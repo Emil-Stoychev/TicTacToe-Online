@@ -18,6 +18,7 @@ const AboutComponent = () => {
     let interval = 2000;
 
     useEffect(() => {
+        window.onload = window.scrollTo(0, 0)
         gameService.getGameStatistic()
             .then(res => {
                 setCountCont([res.happyUsers, res.playedUsers, res.fiveStars])
