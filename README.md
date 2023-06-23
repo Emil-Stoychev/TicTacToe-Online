@@ -22,6 +22,9 @@ npm i
 ```bash
 npm start
 ```
+
+## [Backend API Documentation](./server/serverDocumentation.md)
+
 # Introduction
 This is a classic Tic Tac Toe online game with three options to play - Create own, Join with code and random room. There is a chat for easier communication with others and to make experience even better. With interactive design and easy way to join!
 
